@@ -9,4 +9,4 @@ cd /newsbyte/current
 
 source env/bin/activate
 
-scrapy crawl news_ea -o "/var/www/vhosts/localhost.localdomain/m.newsbyte.org/storage/json/ea_2.json" -t json
+scrapy crawl news_ea -o "/var/www/vhosts/localhost.localdomain/m.newsbyte.org/current/storage/json/ea_2.json" -t json
