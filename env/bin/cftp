@@ -1,4 +1,4 @@
-#!/newsbyte/env/bin/python2.7
+#!/newsbyte/current/env/bin/python2.7
 # Copyright (c) Twisted Matrix Laboratories.
 # See LICENSE for details.
 
