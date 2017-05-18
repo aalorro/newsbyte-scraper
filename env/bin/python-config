@@ -1,4 +1,4 @@
-#!/newsbyte/env/bin/python
+#!/newsbyte/current/env/bin/python
 
 import sys
 import getopt

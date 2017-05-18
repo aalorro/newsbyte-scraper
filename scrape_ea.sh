@@ -5,7 +5,7 @@ SHELL=/bin/sh
 export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 cd /
-cd /newsbyte
+cd /newsbyte/current
 
 source env/bin/activate
 
