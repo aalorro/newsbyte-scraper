@@ -36,10 +36,10 @@ class SEANewsSpider(BaseNewsSpider):
         ('http://feeds.bbci.co.uk/burmese/rss.xml', 'parse_common', {'country': 'Myanmar', 'language': 'Burmese', 'method': method, 'xpath': '//div[@property="articleBody"]/p'}),  # Myanmar
         ('http://www.balita.net.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'Tagalog', 'method': method, 'xpath': '//div[@id="container"]/div[1]/p'}),  # Philippines
         ('http://abante.com.ph/feed', 'parse_abante', {'country': 'Philippines', 'language': 'Tagalog', 'method': None, 'xpath': None}),  # Philippines
-        ('http://www.tempo.com.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div/p'}),  # Philippines
-        ('http://www.abs-cbnnews.com/nation/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p'}),  # Philippines
-        ('http://www.abs-cbnnews.com/entertainment/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p'}),  # Philippines
-        ('http://www.abs-cbnnews.com/sports/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p'}),  # Philippines
+        ('http://www.tempo.com.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div/p', 'thumb_xpath': '//p/a/img'}),  # Philippines
+        ('http://www.abs-cbnnews.com/nation/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines
+        ('http://www.abs-cbnnews.com/entertainment/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines
+        ('http://www.abs-cbnnews.com/sports/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines
         ('http://www.thairath.co.th/rss/news', 'parse_common', {'country': 'Thailand', 'language': 'Thai', 'method': method, 'xpath': '//div[@class="entry"]/p/node()'}),  # Thailand
         ('http://www.komchadluek.net/rss/news_widget.xml', 'parse_common', {'country': 'Thailand', 'language': 'Thai', 'method': 'parse_komchad', 'xpath': None}),  # Thailand
         ('http://www.bangkokpost.com/rss/data/most-recent.xml', 'parse_common', {'country': 'Thailand', 'language': 'English', 'method': method, 'xpath': '//div[@class="articleContents"]/p/node()'}),  # Thailand
@@ -158,6 +158,7 @@ class SEANewsSpider(BaseNewsSpider):
             item['region'] = self.region
             item['description'] = entry.description.strip()
             item['item_id'] = str(uuid4())
+            item['thumbnail'] = ''
 
             text = entry.content[0]['value']
             text = ''.join(Selector(text=tools.convert_br(text)).xpath('string(/)').extract())

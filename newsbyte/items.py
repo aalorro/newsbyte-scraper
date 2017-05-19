@@ -21,3 +21,4 @@ class NewsbyteItem(scrapy.Item):
     item_id = scrapy.Field()
     language = scrapy.Field()
     region = scrapy.Field()
+    thumbnail = scrapy.Field()

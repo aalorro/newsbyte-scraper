@@ -7,7 +7,8 @@ set :user, "deployer"
 set :pty, true
 
 set :ssh_options, { :auth_methods => ["publickey"], forward_agent: true, user: fetch(:user), :keys => [
-        "C:\\Users\\IncubixTech\\Workspace\\_keys\\newsbyte\\newsbyte.pem"
+        "C:\\Users\\IncubixTech\\Workspace\\_keys\\newsbyte\\newsbyte.pem",
+        "C:\\Users\\CK\\Documents\\pem-keys\\newsbyte.pem"
     ]
 }
 
