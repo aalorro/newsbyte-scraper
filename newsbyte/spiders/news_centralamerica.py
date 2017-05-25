@@ -19,7 +19,8 @@ class CentralAmericaNewsSpider(BaseNewsSpider):
         ('http://www.listindiario.com/rss/portada/', 'parse_common', {'country': 'Dominican Republic', 'language': 'Spanish', 'method': method, 'xpath': '//div[@id="ArticleBody"]/p'}),  # Dominican Republic
         ('http://www.dominicantoday.com/rss/local/', 'parse_common', {'country': 'Dominican Republic', 'language': 'English', 'method': 'parse_dominican', 'xpath': None}),  # Dominican Republic
         ('http://www.elsalvadornoticias.net/feed/', 'parse_common', {'country': 'El Salvador', 'language': 'Spanish', 'method': 'parse_elsalvador', 'xpath': None}),  # El Salvador
-        ('http://www.lenouvelliste.com/rssfeed', 'parse_common', {'country': 'Haiti', 'language': 'French', 'method': 'parse_lenouvelliste', 'xpath': None}),  # Haiti
+        ('http://www.haitilibre.com/rss-flash-en.xml', 'parse_common', {'country': 'Haiti', 'language': 'English', 'method': method, 'xpath': '//td[@width="100%"]/text()[not(ancestor::span)]'}),  # Haiti
+        ('https://www.haitilibre.com/rss-flash.xml', 'parse_common', {'country': 'Haiti', 'language': 'French', 'method': method, 'xpath': '//td[@width="100%"]/text()[not(ancestor::span)]'}),  # Haiti
         ('http://www.jamaicaobserver.com/rss/news/', 'parse_common', {'country': 'Jamaica', 'language': 'English', 'method': method, 'xpath': '//div[@id="story"]/p'}),  # Jamaica
         ('http://www.jamaica-gleaner.com/feed/rss.xml', 'parse_common', {'country': 'Jamaica', 'language': 'English', 'method': method, 'xpath': '//div[@property="content:encoded"]//text()'}),  # Jamaica
         ('http://www.prensalibre.com/smartTV/nacionales.xml', 'parse_common', {'country': 'Guatemala', 'language': 'Spanish', 'method': 'parse_prensalibre', 'xpath': None}),  # Guatemala
