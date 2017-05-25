@@ -22,7 +22,7 @@ class SEANewsSpider(BaseNewsSpider):
     start_urls = [
         ('http://kohsantepheapdaily.com.kh/rss', 'parse_common', {'country': 'Cambodia', 'language': 'Khmer', 'method': method, 'xpath': '//div[@id="fullArticle"]/p'}),  # Cambodia
         ('http://vodhotnews.com/rss', 'parse_common', {'country': 'Cambodia', 'language': 'Khmer', 'method': method, 'xpath': '//article/p'}),  # Cambodia
-        ('http://feeds.thecambodianews.net/rss/c7e1014a94f7e43b', 'parse_common', {'country': 'Cambodia', 'language': 'English', 'method': 'parse_cambodianews', 'xpath': '//div[@class="article_text"]/p'}),  # Cambodia
+        ('http://feeds.thecambodianews.net/rss/c7e1014a94f7e43b', 'parse_common', {'country': 'Cambodia', 'language': 'English', 'method': method, 'xpath': '//div[@class="text"]/p'}),  # Cambodia
         ('http://www.tribunnews.com/rss', 'parse_common', {'country': 'Indonesia', 'language': 'Indonesian', 'method': method, 'xpath': '//div[@class="side-article txt-article"]/p'}),  # Indonesia
         ('http://www.merdeka.com/feed/', 'parse_common', {'country': 'Indonesia', 'language': 'Indonesian', 'method': method, 'xpath': '//div[@id="mdk-body-newsarea"]/p'}),  # Indonesia
         ('http://jakartaglobe.beritasatu.com/rss/news/', 'parse_common', {'country': 'Indonesia', 'language': 'English', 'method': 'parse_jakartaglobe', 'xpath': None}),  # Indonesia
@@ -30,19 +30,18 @@ class SEANewsSpider(BaseNewsSpider):
         ('http://vientianemai.net/site/column/1.html', 'parse_vienlinks', {'country': 'Laos', 'language': 'Lao', 'method': 'parse_viencontent', 'xpath': None}),  # Laos
         ('https://www.kuanjailao.com/feed', 'parse_common', {'country': 'Laos', 'language': 'Lao', 'method': method, 'xpath': '//div[@class="entry"]/p'}), # Laos
         ('http://lao.voanews.com/api/', 'parse_common', {'country': 'Laos', 'language': 'Lao', 'method': method, 'xpath': '//div[@class="wsw"]/p'}), # Laos
-        ('http://www.hmetro.com.my/utama.xml', 'parse_common', {'country': 'Malaysia', 'language': 'Malay', 'method': method, 'xpath': '//div[@class="field-item even"]/p'}),  # Malaysia
+        ('http://www.bharian.com.my/terkini.xml', 'parse_common', {'country': 'Malaysia', 'language': 'Malay', 'method': method, 'xpath': '//div[@class="field-item even"]/p'}),  # Malaysia
         ('http://www.thestar.com.my/rss/news/nation/', 'parse_common', {'country': 'Malaysia', 'language': 'English', 'method': method, 'xpath': '//div[@class="story"]/p'}),  # Malaysia
         ('http://www.irrawaddy.org/feed', 'parse_common', {'country': 'Myanmar', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-entry pad"]/p'}),  # Myanmar
         ('http://feeds.bbci.co.uk/burmese/rss.xml', 'parse_common', {'country': 'Myanmar', 'language': 'Burmese', 'method': method, 'xpath': '//div[@property="articleBody"]/p'}),  # Myanmar
         ('http://www.balita.net.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'Tagalog', 'method': method, 'xpath': '//div[@id="container"]/div[1]/p'}),  # Philippines
         ('http://abante.com.ph/feed', 'parse_abante', {'country': 'Philippines', 'language': 'Tagalog', 'method': None, 'xpath': None}),  # Philippines
-        ('http://www.tempo.com.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div/p'}),  # Philippines
-        ('http://www.abs-cbnnews.com/nation/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p'}),  # Philippines
-        ('http://www.abs-cbnnews.com/entertainment/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p'}),  # Philippines
-        ('http://www.abs-cbnnews.com/sports/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p'}),  # Philippines
-        ('http://www.thairath.co.th/rss/news', 'parse_common', {'country': 'Thailand', 'language': 'Thai', 'method': method, 'xpath': '//div[@class="entry"]/p/node()'}),  # Thailand
-        ('http://www.komchadluek.net/rss/news_widget.xml', 'parse_common', {'country': 'Thailand', 'language': 'Thai', 'method': 'parse_komchad', 'xpath': None}),  # Thailand
+        ('http://www.tempo.com.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div/p', 'thumb_xpath': '//p/a/img'}),  # Philippines
+        ('http://www.abs-cbnnews.com/nation/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines
+        ('http://www.abs-cbnnews.com/entertainment/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines
+        ('http://www.abs-cbnnews.com/sports/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines
         ('http://www.bangkokpost.com/rss/data/most-recent.xml', 'parse_common', {'country': 'Thailand', 'language': 'English', 'method': method, 'xpath': '//div[@class="articleContents"]/p/node()'}),  # Thailand
+        ('http://www.thairath.co.th/rss/news', 'parse_common', {'country': 'Thailand', 'language': 'Thai', 'method': method, 'xpath': '//article/p'}),  # Thailand
         ('http://e.vnexpress.net/rss/home.rss', 'parse_common', {'country': 'Vietnam', 'language': 'English', 'method': method, 'xpath': '//div//p'}),  # Vietnam
         ('http://vnexpress.net/rss/thoi-su.rss', 'parse_common', {'country': 'Vietnam', 'language': 'Vietnamese', 'method': method, 'xpath': '//div//p'}),  # Vietnam
     ]
@@ -158,6 +157,7 @@ class SEANewsSpider(BaseNewsSpider):
             item['region'] = self.region
             item['description'] = entry.description.strip()
             item['item_id'] = str(uuid4())
+            item['thumbnail'] = ''
 
             text = entry.content[0]['value']
             text = ''.join(Selector(text=tools.convert_br(text)).xpath('string(/)').extract())

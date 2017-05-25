@@ -7,7 +7,8 @@ set :user, "deployer"
 set :pty, true
 
 set :ssh_options, { :auth_methods => ["publickey"], forward_agent: true, user: fetch(:user), :keys => [
-        "C:\\Users\\IncubixTech\\Workspace\\_keys\\newsbyte\\newsbyte.pem"
+        "C:\\Users\\IncubixTech\\Workspace\\_keys\\newsbyte\\newsbyte.pem",
+        "C:\\Users\\CK\\Documents\\pem-keys\\newsbyte.pem"
     ]
 }
 
@@ -28,12 +29,21 @@ namespace :git do
     end
 end
 
-namespace :plesk do
+namespace :filesystem do
     desc "Change deploy folder's ownership to psacln"
-    task :group_ownership do
+    task :ownership do
         on roles(:app), in: :sequence, wait: 5 do
             within release_path do
-                execute :sudo, :chown, "-R", "deployer:psacln", "#{current_path}"
+                execute :chown, "-R", "deployer:psacln", "#{current_path}/*"
+                execute :chown, "-R", "deployer:psacln", "env/*"
+            end
+        end
+    end
+    task :permissions do
+        on roles(:app), in: :sequence, wait: 5 do
+            within release_path do
+                execute :chmod, "775 -R", "#{current_path}/*"
+                execute :chmod, "775 -R", "env/*"
             end
         end
     end
@@ -41,5 +51,6 @@ end
 
 namespace :deploy do
     # after :published, "git:check_revision"
-    after :published, "plesk:group_ownership"
+    after :published, "filesystem:ownership"
+    after :published, "filesystem:permissions"
 end
