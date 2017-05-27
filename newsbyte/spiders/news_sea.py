@@ -26,7 +26,7 @@ class SEANewsSpider(BaseNewsSpider):
         ('http://www.tribunnews.com/rss', 'parse_common', {'country': 'Indonesia', 'language': 'Indonesian', 'method': method, 'xpath': '//div[@class="side-article txt-article"]/p'}),  # Indonesia
         ('http://www.merdeka.com/feed/', 'parse_common', {'country': 'Indonesia', 'language': 'Indonesian', 'method': method, 'xpath': '//div[@id="mdk-body-newsarea"]/p'}),  # Indonesia
         ('http://jakartaglobe.beritasatu.com/rss/news/', 'parse_common', {'country': 'Indonesia', 'language': 'English', 'method': 'parse_jakartaglobe', 'xpath': None}),  # Indonesia
-        ('http://www.laosnews.net/index.php/rss/a6670896145a3ae3', 'parse_common', {'country': 'Laos', 'language': 'English', 'method': 'parse_laosnews', 'xpath': '//div[@class="article_text"]/p'}),  # Laos
+        ('http://feeds.laosnews.net/rss/a6670896145a3ae3', 'parse_common', {'country': 'Laos', 'language': 'English', 'method': 'parse_laosnews', 'xpath': None}),  # Laos
         ('http://vientianemai.net/site/column/1.html', 'parse_vienlinks', {'country': 'Laos', 'language': 'Lao', 'method': 'parse_viencontent', 'xpath': None}),  # Laos
         ('https://www.kuanjailao.com/feed', 'parse_common', {'country': 'Laos', 'language': 'Lao', 'method': method, 'xpath': '//div[@class="entry"]/p'}), # Laos
         ('http://lao.voanews.com/api/', 'parse_common', {'country': 'Laos', 'language': 'Lao', 'method': method, 'xpath': '//div[@class="wsw"]/p'}), # Laos
@@ -88,7 +88,7 @@ class SEANewsSpider(BaseNewsSpider):
     def parse_laosnews(self, response):
         item = response.meta['item']
         item['description'] = self.clean_description(item['description'])
-        nodes = response.xpath('//div[@class="article_text"]/p').extract()
+        nodes = response.xpath('//div[@class="text"]/p').extract()
 
         nodes = self.clean_html_tags(nodes)
 

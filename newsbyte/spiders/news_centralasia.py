@@ -16,8 +16,7 @@ class CentralAsiaNewsSpider(BaseNewsSpider):
     region = 'Central Asia'
     method = BaseNewsSpider.method
     start_urls = [
-        ('http://inform.kz/rss/rus.xml', 'parse_common', {'country': 'Kazakhstan', 'language': 'Mixed', 'method': method, 'xpath': '//div[@class="article_container"]/p'}),  # Kazakhstan
-        ('http://kaz.caravan.kz/rss/rss.xml', 'parse_common', {'country': 'Kazakhstan', 'language': 'Mixed', 'method': method, 'xpath': '//div[@class="full-article__text"]/p'}),  # Kazakhstan
+        ('http://inform.kz/rss/rus.xml', 'parse_common', {'country': 'Kazakhstan', 'language': 'Russian', 'method': method, 'xpath': '//div[@class="article_body"]/p'}),  # Kazakhstan
         ('http://astanatimes.com/feed/', 'parse_common', {'country': 'Kazakhstan', 'language': 'English', 'method': method, 'xpath': '//div[@class="post"]/p'}),  # Kazakhstan
         ('http://www.vb.kg/?rss', 'parse_common', {'country': 'Kyrgyzstan', 'language': 'Russian', 'method': method, 'xpath': '//div[@class="topic-text"]/p/text()'}),  # Kyrgyzstan
         ('http://www.ca-news.org/rss/canews.rss', 'parse_common', {'country': 'Kyrgyzstan', 'language': 'Russian', 'method': method, 'xpath': '//div[@class="newstext"]/p/node()'}),  # Kyrgyzstan
@@ -35,7 +34,7 @@ class CentralAsiaNewsSpider(BaseNewsSpider):
 
     def parse_kabar(self, response):
         item = response.meta['item']
-        nodes = response.xpath('//div[@class="inner-text"]/p/node()').extract()
+        nodes = response.xpath('//div[@class="post-content clearfix"]/p/node()').extract()
         item['description'] = nodes[0]
 
         nodes = self.clean_html_tags(nodes)
