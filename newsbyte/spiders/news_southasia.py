@@ -26,14 +26,17 @@ class SouthAsiaNewsSpider(BaseNewsSpider):
         ('http://www.thedailystar.net/newspaper', 'parse_dailystarlinks', {'country': 'Bangladesh', 'language': 'English', 'method': 'parse_dailystarcontent', 'xpath': None}),  # Bangladesh
         ('http://www.dzkuensel.bt/', 'parse_kuensellinks', {'country': 'Bhutan', 'language': 'Dzongkha', 'method': method, 'xpath': '//article/p'}),  # Bhutan
         ('http://www.kuenselonline.com/feed/', 'parse_common', {'country': 'Bhutan', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Bhutan
+        ('http://www.bhaskar.com/rss-feed/2322/', 'parse_common', {'country': 'India', 'language': 'Hindi', 'method': method, 'xpath': '//div[@class="ba_cntebt_text introFirst"]/div'}),  # India
         ('http://rss.jagran.com/rss/news/national.xml', 'parse_common', {'country': 'India', 'language': 'Hindi', 'method': method, 'xpath': '//div[@class="article-content"]/p'}),  # India
         ('http://indianexpress.com/section/india/feed/', 'parse_common', {'country': 'India', 'language': 'English', 'method': method, 'xpath': '//div[@class="full-details"]/p'}),  # India
+        ('http://maldivesindependent.com/feed', 'parse_common', {'country': 'Maldives', 'language': 'English', 'method': method, 'xpath': '//div[@class="panel-content shortocde-content"]/p'}),  # Maldives
         ('http://www.kavaasaa.com/feed/rss.html', 'parse_common', {'country': 'Maldives', 'language': 'Dhivehi', 'method': method, 'xpath': '//div[@class="item-page"]/p'}),  # Maldives
         ('http://www.onsnews.com/feed/', 'parse_common', {'country': 'Nepal', 'language': 'Nepali', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Nepal
-        ('http://feeds.nepalnews.net/rss/7399985502eaed63', 'parse_common', {'country': 'Nepal', 'language': 'English', 'method': 'parse_nepalnews', 'xpath': '//div[@class="p402_premium"]/p'}),  # Nepal
+        ('http://feeds.nepalnews.net/rss/7399985502eaed63', 'parse_common', {'country': 'Nepal', 'language': 'English', 'method': 'parse_nepalnews', 'xpath': None}),  # Nepal
+        ('http://tribune.com.pk/pakistan/feed/', 'parse_common', {'country': 'Pakistan', 'language': 'English', 'method': method, 'xpath': '//div[@class="clearfix story-content read-full"]/p'}),  # Pakistan
         ('http://feeds.feedburner.com/dawn-news?format=xml', 'parse_common', {'country': 'Pakistan', 'language': 'English', 'method': 'parse_dawn', 'xpath': None}),  # Pakistan
         ('http://feeds.bbci.co.uk/urdu/rss.xml', 'parse_common', {'country': 'Pakistan', 'language': 'Urdu', 'method': method, 'xpath': '//div[@property="articleBody"]/p'}),  # Pakistan
-        ('http://nation.lk/online/pages/news/top-story/', 'parse_nationlinks', {'country': 'Sri Lanka', 'language': 'English', 'method': 'parse_nationcontent', 'xpath': None}),  # Sri Lanka
+        ('http://www.dailymirror.lk/RSS_Feeds/breaking-news', 'parse_common', {'country': 'Sri Lanka', 'language': 'English', 'method': method, 'xpath': '//div[@class="row inner-text"]/p'}),  # Sri Lanka
         ('http://www.lankadeepa.lk/index.php/maincontroller/breakingnews_rss', 'parse_common', {'country': 'Sri Lanka', 'language': 'Sinhala', 'method': method, 'xpath': '//span[@class="entry-content"]/p'}),  # Sri Lanka
     ]
 
@@ -134,7 +137,7 @@ class SouthAsiaNewsSpider(BaseNewsSpider):
     def parse_nepalnews(self, response):
         item = response.meta['item']
         item['description'] = self.clean_description(item['description'])
-        nodes = response.xpath('//div[@class="article_text"]/p').extract()
+        nodes = response.xpath('//div[@class="text"]/p').extract()
 
         nodes = self.clean_html_tags(nodes)
 
@@ -143,6 +146,7 @@ class SouthAsiaNewsSpider(BaseNewsSpider):
 
         item['article'] = self.newline_join_lst(nodes)
         if item['article'] == '':
+            print "No article"
             return None
 
         return item
