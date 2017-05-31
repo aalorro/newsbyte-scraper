@@ -18,7 +18,7 @@ class WestAsiaNewsSpider(BaseNewsSpider):
     method = BaseNewsSpider.method
     start_urls = [
         ('http://www.almadapaper.net/rss/', 'parse_common', {'country': 'Iraq', 'language': 'Arabic', 'method': 'parse_almada', 'xpath': 'West Asia'}),  # Iraq
-        ('http://feeds.feedburner.com/IraqiDinarRevaluation', 'parse_common', {'country': 'Iraq', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Iraq
+        ('http://feeds.iraqsun.com/rss/c31d0aaa23b24a75', 'parse_common', {'country': 'Iraq', 'language': 'English', 'method': method, 'xpath': '//div[@class="banner-text"]/p'}),  # Iraq
         ('http://www.aljoumhouria.com/news/rss', 'parse_common', {'country': 'Lebanon', 'language': 'Arabic', 'method': 'parse_aljoum', 'xpath': None}),  # Lebanon
         ('https://rss.mmedia.me/xml/latestnewsrss.aspx', 'parse_common', {'country': 'Lebanon', 'language': 'English', 'method': method, 'xpath': '//div[@class="article_txt"]/p'}),  # Lebanon
         ('http://alwatan.com/feed', 'parse_common', {'country': 'Oman', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Oman
