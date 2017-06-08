@@ -50,7 +50,7 @@ class AfricaNewsSpider(BaseNewsSpider):
         ('http://newsghana.com.gh/feed/', 'parse_common', {'country': 'Ghana', 'language': 'English', 'method': method, 'xpath': '//div[@class="td-post-content"]/p/text()'}),  # Ghana
         ('http://www.ghananewsagency.org/rss.php', 'parse_common', {'country': 'Ghana', 'language': 'English', 'method': method, 'xpath': '//div[@itemprop="articleBody"]/p/span/text()'}),  # Ghana
         ('http://allafrica.com/tools/headlines/rdf/guinea/headlines.rdf', 'parse_common', {'country': 'Guinea', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Guinea
-        ('http://guineenews.org/feed/', 'parse_common', {'country': 'Guinea', 'language': 'French', 'method': method, 'xpath': '//div[@class="entry-content"]/p'}),  # Guinea
+        ('http://guineenews.org/feed/', 'parse_common', {'country': 'Guinea', 'language': 'French', 'method': method, 'xpath': '//div[@class="td-post-content"]/p'}),  # Guinea
         ('http://www.africaguinee.com/?q=rss.xml', 'parse_common', {'country': 'Guinea', 'language': 'French', 'method': method, 'xpath': '//div[@class="field-item even"]/p'}),  # Guinea
         ('http://www.nation.co.ke/rss', 'parse_common', {'country': 'Kenya', 'language': 'English', 'method': method, 'xpath': '//div/p[@class="MsoNormal"]'}),  # Kenya
         ('http://www.standardmedia.co.ke/rss/kenya.php', 'parse_common', {'country': 'Kenya', 'language': 'English', 'method': method, 'xpath': '//div[@class="main-article"]/p'}),  # Kenya
