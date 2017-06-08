@@ -36,7 +36,7 @@ class SEANewsSpider(BaseNewsSpider):
         ('http://feeds.bbci.co.uk/burmese/rss.xml', 'parse_common', {'country': 'Myanmar', 'language': 'Burmese', 'method': method, 'xpath': '//div[@property="articleBody"]/p'}),  # Myanmar
         ('http://www.balita.net.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'Tagalog', 'method': method, 'xpath': '//div[@id="container"]/div[1]/p'}),  # Philippines
         ('http://abante.com.ph/feed', 'parse_abante', {'country': 'Philippines', 'language': 'Tagalog', 'method': None, 'xpath': None}),  # Philippines
-        ('http://www.tempo.com.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div/p', 'thumb_xpath': '//p/a/img'}),  # Philippines
+        ('http://www.tempo.com.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[contains(@class, "entry")]/p', 'thumb_xpath': '//p/a/img'}),  # Philippines
         ('http://www.abs-cbnnews.com/nation/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines
         ('http://www.abs-cbnnews.com/entertainment/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines
         ('http://www.abs-cbnnews.com/sports/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines

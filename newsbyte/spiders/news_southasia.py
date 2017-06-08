@@ -37,7 +37,7 @@ class SouthAsiaNewsSpider(BaseNewsSpider):
         ('http://feeds.feedburner.com/dawn-news?format=xml', 'parse_common', {'country': 'Pakistan', 'language': 'English', 'method': 'parse_dawn', 'xpath': None}),  # Pakistan
         ('http://feeds.bbci.co.uk/urdu/rss.xml', 'parse_common', {'country': 'Pakistan', 'language': 'Urdu', 'method': method, 'xpath': '//div[@property="articleBody"]/p'}),  # Pakistan
         ('http://www.dailymirror.lk/RSS_Feeds/breaking-news', 'parse_common', {'country': 'Sri Lanka', 'language': 'English', 'method': method, 'xpath': '//div[@class="row inner-text"]/p'}),  # Sri Lanka
-        ('http://www.lankadeepa.lk/index.php/maincontroller/breakingnews_rss', 'parse_common', {'country': 'Sri Lanka', 'language': 'Sinhala', 'method': method, 'xpath': '//span[@class="entry-content"]/p'}),  # Sri Lanka
+        ('http://www.lankadeepa.lk/rss/latest_news/1', 'parse_common', {'country': 'Sri Lanka', 'language': 'Sinhala', 'method': method, 'xpath': '//header[@class="post-content"]/p'}),  # Sri Lanka
     ]
 
     def __init__(self, domain=None):
