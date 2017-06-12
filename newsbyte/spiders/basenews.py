@@ -86,7 +86,7 @@ class BaseNewsSpider(Spider):
                 elif pubdate is None and 'published' in attributes:
                     pubdate = entry.published
                 if pubdate is None:
-                    pubdate = time.localtime()  # if there is no pubdate the time it is scraped is usedused
+                    pubdate = time.localtime()  # if there is no pubdate the time it is scraped is used
                 if not isinstance(pubdate, unicode):  # if pubdate is not unicode
 
                     # fix wrong dates
