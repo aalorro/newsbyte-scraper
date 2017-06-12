@@ -10,6 +10,7 @@ import time
 from scrapy import Request
 from dateutil.parser import parse
 import pdb
+from datetime import datetime
 
 
 class SouthAsiaNewsSpider(BaseNewsSpider):
@@ -30,7 +31,7 @@ class SouthAsiaNewsSpider(BaseNewsSpider):
         ('http://rss.jagran.com/rss/news/national.xml', 'parse_common', {'country': 'India', 'language': 'Hindi', 'method': method, 'xpath': '//div[@class="article-content"]/p'}),  # India
         ('http://indianexpress.com/section/india/feed/', 'parse_common', {'country': 'India', 'language': 'English', 'method': method, 'xpath': '//div[@class="full-details"]/p'}),  # India
         ('http://maldivesindependent.com/feed', 'parse_common', {'country': 'Maldives', 'language': 'English', 'method': method, 'xpath': '//div[@class="panel-content shortocde-content"]/p'}),  # Maldives
-        ('http://www.kavaasaa.com/feed/rss.html', 'parse_common', {'country': 'Maldives', 'language': 'Dhivehi', 'method': method, 'xpath': '//div[@class="item-page"]/p'}),  # Maldives
+        ('https://mihaaru.com/', 'parse_mihaaru_links', {'country': 'Maldives', 'language': 'Dhivehi', 'method': 'parse_mihaaru_content', 'xpath': None}),  # Maldives
         ('http://www.onsnews.com/feed/', 'parse_common', {'country': 'Nepal', 'language': 'Nepali', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Nepal
         ('http://feeds.nepalnews.net/rss/7399985502eaed63', 'parse_common', {'country': 'Nepal', 'language': 'English', 'method': 'parse_nepalnews', 'xpath': None}),  # Nepal
         ('http://tribune.com.pk/pakistan/feed/', 'parse_common', {'country': 'Pakistan', 'language': 'English', 'method': method, 'xpath': '//div[@class="clearfix story-content read-full"]/p'}),  # Pakistan
@@ -134,6 +135,65 @@ class SouthAsiaNewsSpider(BaseNewsSpider):
 
             yield request
 
+    def parse_mihaaru_links(self, response):
+        """
+        Does not use an RSS Feed.
+        Scrapes site for links to articles.
+        """
+        links = response.xpath('//div[@class="main_news_size_2"]/a')
+
+        for link in links:
+            item = NewsbyteItem()
+            item['source'] = response.url
+            url = link.xpath('@href').extract()
+            item['link'] = url[0]
+            title = link.xpath('text()').extract()
+            item['title'] = title[0]
+            item['country'] = '#' if response.meta['country'] is None else response.meta['country']
+            item['item_id'] = str(uuid4())
+            item['language'] = '#' if response.meta['language'] is None else response.meta['language']
+            item['region'] = self.region
+            pubdate = time.localtime()  # if there is no pubdate the time it is scraped is used
+            item['pubdate'] = time.mktime(pubdate)
+            request = Request(
+                item['link'],
+                callback=getattr(self, response.meta['method']),
+                dont_filter=response.meta.get('dont_filter', False)
+            )
+            request.meta['item'] = item
+
+            yield request
+
+    def parse_mihaaru_content(self, response):
+        """
+        Scrapes article content.
+        """
+        item = response.meta['item']
+
+        if 'thumb_xpath' in response.meta:
+            thumb_xpath = response.meta['thumb_xpath']
+            try:
+                thumb_nodes = response.xpath(thumb_xpath).extract()
+                thumb_nodes = self.get_images(thumb_nodes)
+                item['thumbnail'] = thumb_nodes[0]
+            except:
+                item['thumbnail'] = ''
+        else:
+            item['thumbnail'] = ''
+
+        nodes = response.xpath('//article/p').extract()
+        nodes = self.clean_html_tags(nodes)
+
+        description = nodes[0]
+        item['description'] = (description[:512] + '...') if len(description) > 512 else data
+
+        item['article'] = self.newline_join_lst(nodes)
+        if item['article'] == '':
+            print "No article"
+            return None
+
+        return item
+
     def parse_nepalnews(self, response):
         item = response.meta['item']
         item['description'] = self.clean_description(item['description'])
@@ -158,52 +218,6 @@ class SouthAsiaNewsSpider(BaseNewsSpider):
 
         nodes = self.clean_html_tags(nodes)
 
-        item['article'] = self.newline_join_lst(nodes)
-        if item['article'] == '':
-            return None
-
-        return item
-
-    def parse_nationlinks(self, response):
-        """
-        Does not use an RSS Feed.
-        """
-        for link in response.xpath('//div[@class="td-ss-main-content"]//div[@class="item-details"]/h3/a/@href'):
-            new_link = link.extract()
-            item = NewsbyteItem()
-            item['source'] = response.url
-            item['link'] = new_link
-            item['country'] = '#' if response.meta['country'] is None else response.meta['country']
-            item['item_id'] = str(uuid4())
-            item['language'] = '#' if response.meta['language'] is None else response.meta['language']
-            item['region'] = self.region
-            request = Request(
-                new_link,
-                callback=getattr(self, response.meta['method']),
-                dont_filter=response.meta.get('dont_filter', False)
-            )
-            request.meta['item'] = item
-            request.meta['xpath'] = response.meta['xpath']
-
-            yield request
-
-    def parse_nationcontent(self, response):
-        item = response.meta['item']
-
-        # extract the article date as a string from the returned list of xpath method
-        pubdate = ''.join(response.xpath('//header//div[@class="td-post-date"]/time/@datetime').extract())
-        # turn pubdate into a datetime object
-        pubdate = parse(pubdate, fuzzy=True, yearfirst=True)
-        # turn pubdate into a unix timestamp
-        pubdate = time.mktime(pubdate.timetuple())
-        item['pubdate'] = pubdate
-
-        item['title'] = ''.join(response.xpath('//header/h1[@class="entry-title"]/text()').extract())
-
-        nodes = response.xpath('//div[@class="td-post-content td-pb-padding-side"]/p').extract()
-
-        nodes = self.clean_html_tags(nodes)
-        item['description'] = nodes[0]
         item['article'] = self.newline_join_lst(nodes)
         if item['article'] == '':
             return None
