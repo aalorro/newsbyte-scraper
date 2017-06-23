@@ -129,31 +129,34 @@ class BaseNewsSpider(Spider):
                 print entry
 
     def parse_body(self, response):
-        item = response.meta['item']
-        content_xpath = response.meta['xpath']
+        try:
+            item = response.meta['item']
+            content_xpath = response.meta['xpath']
 
-        nodes = response.xpath(content_xpath).extract()
-        nodes = self.clean_html_tags(nodes)
-        item['description'] = self.clean_description(item['description'])
+            nodes = response.xpath(content_xpath).extract()
+            nodes = self.clean_html_tags(nodes)
+            item['description'] = self.clean_description(item['description'])
 
-        if item['description'] == '':
-            item['description'] = nodes[0]
+            if item['description'] == '':
+                item['description'] = nodes[0]
 
-        item['article'] = self.newline_join_lst(nodes)
-        if item['article'] == '':
-            print "No article"
-            return None
+            item['article'] = self.newline_join_lst(nodes)
+            if item['article'] == '':
+                print "No article"
+                return None
 
-        if 'thumb_xpath' in response.meta:
-            thumb_xpath = response.meta['thumb_xpath']
-            try:
-                thumb_nodes = response.xpath(thumb_xpath).extract()
-                thumb_nodes = self.get_images(thumb_nodes)
-                item['thumbnail'] = thumb_nodes[0]
-            except:
-                print 'No thumbnail'
+            if 'thumb_xpath' in response.meta:
+                thumb_xpath = response.meta['thumb_xpath']
+                try:
+                    thumb_nodes = response.xpath(thumb_xpath).extract()
+                    thumb_nodes = self.get_images(thumb_nodes)
+                    item['thumbnail'] = thumb_nodes[0]
+                except:
+                    print 'No thumbnail'
+                    item['thumbnail'] = ''
+            else:
                 item['thumbnail'] = ''
-        else:
-            item['thumbnail'] = ''
 
-        return item
+            return item
+        except Exception as e:
+            print '%s: %s' % (type(e), e)
