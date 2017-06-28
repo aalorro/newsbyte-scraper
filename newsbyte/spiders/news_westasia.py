@@ -26,14 +26,14 @@ class WestAsiaNewsSpider(BaseNewsSpider):
         ('http://www.almadapaper.net/rss/', 'parse_common', {'country': 'Iraq', 'language': 'Arabic', 'method': 'parse_almada', 'xpath': 'West Asia'}),  # Iraq
         ('http://feeds.iraqsun.com/rss/c31d0aaa23b24a75', 'parse_common', {'country': 'Iraq', 'language': 'English', 'method': method, 'xpath': '//div[@class="banner-text"]/p'}),  # Iraq
         ('http://www.aljoumhouria.com/news/rss', 'parse_common', {'country': 'Lebanon', 'language': 'Arabic', 'method': 'parse_aljoum', 'xpath': None}),  # Lebanon
-        ('http://www.dailystar.com.lb/RSS.aspx?live=1', 'parse_common', {'country': 'Lebanon', 'language': 'English', 'method': method, 'xpath': '//div[@id="divDetails"]/p'}),  # Lebanon
+        ('http://www.dailystar.com.lb/RSS.aspx?live=1', 'parse_common', {'country': 'Lebanon', 'language': 'English', 'method': method, 'xpath': '//p[@id="bodyHolder_divDetails"]'}),  # Lebanon
         ('http://alwatan.com/feed', 'parse_common', {'country': 'Oman', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Oman
         ('http://www.muscatdaily.com/rss/feed/Muscat_Daily_Oman_News', 'parse_common', {'country': 'Oman', 'language': 'English', 'method': 'parse_muscat', 'xpath': None}),  # Oman
         ('http://english.pnn.ps/feed/', 'parse_common', {'country': 'Palestine', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Palestine
-        ('http://www.raya.ps/ar/rss/news', 'parse_common', {'country': 'Palestine', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="content_box"]/p/text()'}),  # Palestine
+        ('http://www.al-ayyam.ps/rss.php', 'parse_al_ayyam', {'country': 'Palestine', 'language': 'Arabic', 'method': method, 'xpath': '//div[@id="main_div"]/p'}),  # Palestine
         ('http://www.aljazeera.net/aljazeerarss/3c66e3fb-a5e0-4790-91be-ddb05ec17198/4e9f594a-03af-4696-ab98-880c58cd6718', 'parse_common', {'country': 'Saudi Arabia', 'language': 'Arabic', 'method': method, 'xpath': '//div[contains(@class,"article-body")]/p'}),  # Saudi Arabia
-        ('http://www.arabnews.com/rss.xml', 'parse_common', {'country': 'Saudi Arabia', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry-content wow fadeInUp"]/p'}),  # Saudi Arabia
-        ('http://www.arabnews.com/cat/1/rss.xml', 'parse_common', {'country': 'Saudi Arabia', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry-content wow fadeInUp"]/p'}),  # Saudi Arabia
+        ('http://www.arabnews.com/rss.xml', 'parse_common', {'country': 'Saudi Arabia', 'language': 'English', 'method': method, 'xpath': '//div[contains(@class,"entry-content")]/div[contains(@class,"show-for-small-only")]'}),  # Saudi Arabia
+        ('http://www.arabnews.com/cat/1/rss.xml', 'parse_common', {'country': 'Saudi Arabia', 'language': 'English', 'method': method, 'xpath': '//div[contains(@class,"entry-content")]/div[contains(@class,"show-for-small-only")]'}),  # Saudi Arabia
         ('http://www.elfagr.org/rss.aspx', 'parse_common', {'country': 'Yemen', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="ni-content"]'}),  # Yemen
         ('http://www.saba.ye/en/rsscatfeed.php?category=14', 'parse_saba', {'country': 'Yemen', 'language': 'English', 'method': method, 'xpath': '//div[@class="mainText"]'}),  # Yemen
     ]
@@ -86,6 +86,61 @@ class WestAsiaNewsSpider(BaseNewsSpider):
             return None
 
         return item
+
+    def parse_al_ayyam(self, response):
+        """
+        This function uses feedparser to parse through rss feeds extracting the XML nodes important to present in news articles
+         (i.e title of article, link, publication date, etc.) and populates the scrapy.Fields in the NewsbyteItem dictionary with said info.
+        """
+        feed = feedparser.parse(response.body)
+        for entry in feed.entries:
+            try:
+                item = NewsbyteItem()
+                item['source'] = response.url
+                print item['source']
+                item['title'] = lxml.html.fromstring(entry.title).text
+                pubdate = entry.published
+                if not isinstance(pubdate, unicode):  # if pubdate is not unicode
+
+                    # fix wrong dates
+                    if pubdate.tm_year < 2000:
+                        pubdate = time.localtime()
+                    elif time.localtime().tm_yday - pubdate.tm_yday > 7:
+                        print 'out'
+                        continue
+                    else:
+                        item['pubdate'] = time.mktime(pubdate)
+                else:
+                    pubdate = parse(pubdate, fuzzy=True, dayfirst=True)
+                    pubdate = time.mktime(pubdate.timetuple())
+
+                item['pubdate'] = pubdate
+                item['link'] = 'http://www.al-ayyam.ps/' + entry.link
+                item['country'] = '#' if response.meta['country'] is None else response.meta['country']
+                item['language'] = '#' if response.meta['language'] is None else response.meta['language']
+                item['description'] = entry.description
+                item['item_id'] = str(uuid4())
+                item['region'] = self.region
+                print item
+                request = Request(
+                    item['link'],
+                    callback=getattr(self, response.meta['method']),
+                    dont_filter=response.meta.get('dont_filter', False)
+                )
+
+                request.meta['item'] = item
+                request.meta['entry'] = entry
+                request.meta['xpath'] = response.meta['xpath']
+                if 'thumb_xpath' in response.meta:
+                    request.meta['thumb_xpath'] = response.meta['thumb_xpath']
+                else:
+                    item['thumbnail'] = ''
+
+                yield request
+
+            except Exception as e:
+                print '%s: %s' % (type(e), e)
+                print entry
 
     def parse_saba(self, response):
         """
