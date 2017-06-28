@@ -26,7 +26,7 @@ class WestAsiaNewsSpider(BaseNewsSpider):
         ('http://www.almadapaper.net/rss/', 'parse_common', {'country': 'Iraq', 'language': 'Arabic', 'method': 'parse_almada', 'xpath': 'West Asia'}),  # Iraq
         ('http://feeds.iraqsun.com/rss/c31d0aaa23b24a75', 'parse_common', {'country': 'Iraq', 'language': 'English', 'method': method, 'xpath': '//div[@class="banner-text"]/p'}),  # Iraq
         ('http://www.aljoumhouria.com/news/rss', 'parse_common', {'country': 'Lebanon', 'language': 'Arabic', 'method': 'parse_aljoum', 'xpath': None}),  # Lebanon
-        ('http://www.dailystar.com.lb/RSS.aspx?live=1', 'parse_common', {'country': 'Lebanon', 'language': 'English', 'method': method, 'xpath': '//p[@id="bodyHolder_divDetails"]/div/p'}),  # Lebanon
+        ('http://www.dailystar.com.lb/RSS.aspx?live=1', 'parse_common', {'country': 'Lebanon', 'language': 'English', 'method': method, 'xpath': '//p[@id="bodyHolder_divDetails"]'}),  # Lebanon
         ('http://alwatan.com/feed', 'parse_common', {'country': 'Oman', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Oman
         ('http://www.muscatdaily.com/rss/feed/Muscat_Daily_Oman_News', 'parse_common', {'country': 'Oman', 'language': 'English', 'method': 'parse_muscat', 'xpath': None}),  # Oman
         ('http://english.pnn.ps/feed/', 'parse_common', {'country': 'Palestine', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Palestine
