@@ -61,9 +61,9 @@ class BaseNewsSpider(Spider):
         lst = [element for element in lst if element]
         return lst
 
-###################
-### RSS parser #####
-##################
+####################
+#### RSS parser ####
+####################
 
     def parse_common(self, response):
         """
@@ -88,7 +88,6 @@ class BaseNewsSpider(Spider):
                 if pubdate is None:
                     pubdate = time.localtime()  # if there is no pubdate the time it is scraped is used
                 if not isinstance(pubdate, unicode):  # if pubdate is not unicode
-
                     # fix wrong dates
                     if pubdate.tm_year < 2000:
                         pubdate = time.localtime()
@@ -99,7 +98,6 @@ class BaseNewsSpider(Spider):
                 else:
                     pubdate = parse(pubdate, fuzzy=True, dayfirst=True)
                     pubdate = time.mktime(pubdate.timetuple())
-
                     item['pubdate'] = pubdate
 
                 item['link'] = entry.link

@@ -25,11 +25,11 @@ class AfricaNewsSpider(BaseNewsSpider):
     method = BaseNewsSpider.method
 
     start_urls = [
-        ('http://el-youm.info/ar/feed', 'parse_common', {'country': 'Algeria', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Algeria
+        ('http://www.echoroukonline.com/ara/feed/index.rss', 'parse_common', {'country': 'Algeria', 'language': 'Arabic', 'method': method, 'xpath': '//section[@class="article-contents"]/p'}),  # Algeria
         ('http://www.liberte-algerie.com/article/feed', 'parse_common', {'country': 'Algeria', 'language': 'French', 'method': method, 'xpath': '//div[@id="text_core"]/p'}),  # Algeria
-        ('http://jornaldeangola.sapo.ao/feeds/articles/?section=25', 'parse_common', {'country': 'Angola', 'language': 'Portuguese', 'method': method, 'xpath': '//div[@class="texted"]/p'}),  # Angola
+        ('http://jornaldeangola.sapo.ao/feeds/articles/', 'parse_common', {'country': 'Angola', 'language': 'Portuguese', 'method': method, 'xpath': '//article/p'}),  # Angola
         ('http://allafrica.com/tools/headlines/rdf/angola/headlines.rdf', 'parse_common', {'country': 'Angola', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Angola
-        ('http://www.mmegi.bw/2013_website//widgets/rss/rss.php?wid=1', 'parse_common', {'country': 'Botswana', 'language': 'Mixed', 'method': method, 'xpath': '//div[@class="text"]/p'}),  # Botswana
+        ('http://www.mmegi.bw/2013_website/widgets/rss/rss.php?wid=1', 'parse_common', {'country': 'Botswana', 'language': 'Mixed', 'method': method, 'xpath': '//div[@class="text"]/p'}),  # Botswana
         ('http://allafrica.com/tools/headlines/rdf/burkinafaso/headlines.rdf', 'parse_common', {'country': 'Burkina Faso', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Burkina Faso
         ('http://www.lefaso.net/spip.php?page=backend', 'parse_common', {'country': 'Burkina Faso', 'language': 'French', 'method': method, 'xpath': '//div[@class="texte entry-content"]/p/text()'}),  # Burkina Faso
         ('http://www.cameroonjournal.com/feed/', 'parse_common', {'country': 'Cameroon', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry-content clearfix"]/p'}),  # Cameroon
