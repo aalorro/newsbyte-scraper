@@ -22,6 +22,7 @@ regex==2016.6.19
 ruamel.ordereddict==0.4.9
 ruamel.yaml==0.11.11
 Scrapy==1.1.0
+selenium==3.4.3
 service-identity==16.0.0
 six==1.10.0
 Twisted==16.2.0

@@ -39,10 +39,11 @@ class AfricaNewsSpider(BaseNewsSpider):
         ('http://groupelavenir.org/category/actualites/', 'parse_lavenirlinks', {'country': 'Congo-Kinshasa', 'language': 'French', 'method': 'parse_lavenircontent', 'xpath': None}),  # Congo-Kinshasa
         ('http://allafrica.com/tools/headlines/rdf/congo_kinshasa/headlines.rdf', 'parse_common', {'country': 'Congo-Kinshasa', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Congo-Kinshasa
         ('http://www.lanationdj.com/feed/', 'parse_common', {'country': 'Djibouti', 'language': 'French', 'method': method, 'xpath': '//div[@class="entry"]/p/text()'}),  # Djibouti
-        ('http://www.egyptindependent.com//rss-feed-term/114/rss.xml', 'parse_common', {'country': 'Egypt', 'language': 'English', 'method': 'parse_egyptindependent', 'xpath': '//div[@class="pane-content"]/p'}),  # Egypt
-        ('http://mubasher.aljazeera.net/Services/Rss/?K=MjAwODEwNTEyNTA1MzQyNTY4OUFDU0tFWTEyM0FqQ21zV2ViAA==', 'parse_common', {'country': 'Egypt', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="posBody"]/p'}),  # Egypt
+        ('http://www.egyptindependent.com/feed', 'parse_common', {'country': 'Egypt', 'language': 'English', 'method': method, 'xpath': '//div[@class="col-md-7 overflow-hidden"]/p'}),  # Egypt
+        ('http://mubasher.aljazeera.net/Services/Rss/?K=MjAwODEwNTEyNTA1MzQyNTY4OUFDU0tFWTEyM0FqQ21zV2ViAA==', 'parse_common', {'country': 'Egypt', 'language': 'Arabic', 'method': 'parse_mubasher', 'xpath': None}),  # Egypt
         ('http://addisfortune.net/content/fortune-news/', 'parse_fortunelinks', {'country': 'Ethiopia', 'language': 'English', 'method': 'parse_fortunecontent', 'xpath': None}),  # Ethiopia
         ('http://allafrica.com/tools/headlines/rdf/ethiopia/headlines.rdf', 'parse_common', {'country': 'Ethiopia', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Ethiopia
+        ('https://www.tesfanews.net/feed/', 'parse_common', {'country': 'Eritrea', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="entry-content"]/p'}),  # Eritrea
         ('http://www.farajat.net/ar/feed', 'parse_common', {'country': 'Eritrea', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="post"]/p'}),  # Eritrea
         ('http://www.gabonews.com/spip.php?page=backend&id_rubrique=1', 'parse_common', {'country': 'Gabon', 'language': 'French', 'method': 'parse_gabon', 'xpath': None}),  # Gabon
         ('http://www.gabonews.com/spip.php?page=backend&id_rubrique=2', 'parse_common', {'country': 'Gabon', 'language': 'English', 'method': 'parse_gabon', 'xpath': None}),  # Gabon
@@ -185,22 +186,27 @@ class AfricaNewsSpider(BaseNewsSpider):
 
         return item
 
-    def parse_egyptindependent(self, response):
+    def parse_mubasher(self, response):
         item = response.meta['item']
+        print item
 
-        nodes = response.xpath('//div[@class="pane-content"]/p').extract()
+        try:
+            nodes = response.xpath('//div[contains(@class, "field--name-field-ajmn-summary")]').extract()
+            nodes = self.clean_html_tags(nodes)
+            item['description'] = nodes[0]
+            item['description'] = self.clean_description(item['description'])
 
-        nodes = self.clean_html_tags(nodes)
+            nodes = response.xpath('//div[contains(@class, "field--name-body")]/p').extract()
+            nodes = self.clean_html_tags(nodes)
+            nodes.insert(0, item['description'])
 
-        item['description'] = nodes[0]
+            item['article'] = self.newline_join_lst(nodes)
+            if item['article'] == '':
+                return None
 
-        item['description'] = self.clean_description(item['description'])
-
-        item['article'] = self.newline_join_lst(nodes)
-        if item['article'] == '':
-            return None
-
-        return item
+            return item
+        except Exception as e:
+            print e
 
     def parse_albawab_arabic(self, response):
         item = response.meta['item']

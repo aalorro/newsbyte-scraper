@@ -18,6 +18,7 @@ htmlcov/
 .cache/
 log.txt
 *.json
+*.log
 
 # Windows
 Thumbs.db
