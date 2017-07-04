@@ -13,6 +13,11 @@ from uuid import uuid4
 from dateutil.parser import parse
 from newsbyte.items import NewsbyteItem
 
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 class WestAsiaNewsSpider(BaseNewsSpider):
     """
@@ -26,7 +31,7 @@ class WestAsiaNewsSpider(BaseNewsSpider):
         ('http://www.almadapaper.net/rss/', 'parse_common', {'country': 'Iraq', 'language': 'Arabic', 'method': 'parse_almada', 'xpath': 'West Asia'}),  # Iraq
         ('http://feeds.iraqsun.com/rss/c31d0aaa23b24a75', 'parse_common', {'country': 'Iraq', 'language': 'English', 'method': method, 'xpath': '//div[@class="banner-text"]/p'}),  # Iraq
         ('http://www.aljoumhouria.com/news/rss', 'parse_common', {'country': 'Lebanon', 'language': 'Arabic', 'method': 'parse_aljoum', 'xpath': None}),  # Lebanon
-        ('http://www.dailystar.com.lb/RSS.aspx?live=1', 'parse_common', {'country': 'Lebanon', 'language': 'English', 'method': method, 'xpath': '//p[@id="bodyHolder_divDetails"]'}),  # Lebanon
+        ('http://www.dailystar.com.lb/RSS.aspx?live=1', 'parse_common', {'country': 'Lebanon', 'language': 'English', 'method': 'parse_daily_star', 'xpath': None}),  # Lebanon
         ('http://alwatan.com/feed', 'parse_common', {'country': 'Oman', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Oman
         ('http://www.muscatdaily.com/rss/feed/Muscat_Daily_Oman_News', 'parse_common', {'country': 'Oman', 'language': 'English', 'method': 'parse_muscat', 'xpath': None}),  # Oman
         ('http://english.pnn.ps/feed/', 'parse_common', {'country': 'Palestine', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Palestine
@@ -69,6 +74,43 @@ class WestAsiaNewsSpider(BaseNewsSpider):
             return None
 
         return item
+
+    def parse_daily_star(self, response):
+        item = response.meta['item']
+        print item['link']
+        # Open new window and load article in it
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference('toolkit.startup.max_resumed_crashes', -1);
+        driver = webdriver.Firefox(profile)
+        driver.get(item['link'])
+        try:
+            # Wait until dynamically loaded element appears
+            WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//div[@id="divDetails"]')))
+
+            # Start scraping article
+            article = []
+
+            for text in driver.find_elements_by_xpath('//div[@id="divDetails"]/p'):
+                article.append(text.text)
+
+            article = self.clean_html_tags(article)
+            item['description'] = self.clean_description(item['description'])
+
+            if item['description'] == '':
+                item['description'] = article[0]
+
+            item['article'] = self.newline_join_lst(article)
+            if item['article'] == '':
+                print "No article"
+                driver.close()
+                return None
+
+            print item
+            driver.close()
+            return item
+        except Exception as e:
+            print e
+            driver.close()
 
     def parse_muscat(self, response):
         item = response.meta['item']
