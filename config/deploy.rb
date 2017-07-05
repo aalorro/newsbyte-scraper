@@ -50,7 +50,7 @@ namespace :filesystem do
 end
 
 namespace :deploy do
-    # after :published, "git:check_revision"
+    after :published, "git:check_revision"
     after :published, "filesystem:ownership"
     after :published, "filesystem:permissions"
 end
