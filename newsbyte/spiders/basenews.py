@@ -74,9 +74,8 @@ class BaseNewsSpider(Spider):
         for entry in feed.entries:
             try:
                 item = NewsbyteItem()
-                item['source'] = response.url
-                item['title'] = lxml.html.fromstring(entry.title).text
                 attributes = entry.keys()
+
                 if 'published_parsed' in attributes:
                     pubdate = entry.published_parsed
                 else:
@@ -96,15 +95,20 @@ class BaseNewsSpider(Spider):
                     else:
                         item['pubdate'] = time.mktime(pubdate)
                 else:
-                    pubdate = parse(pubdate, fuzzy=True, dayfirst=True)
+                    if response.url == 'http://mubasher.aljazeera.net/rss.xml':
+                        pubdate = parse(pubdate, fuzzy=True, dayfirst=False)
+                    else:
+                        pubdate = parse(pubdate, fuzzy=True, dayfirst=True)
                     pubdate = time.mktime(pubdate.timetuple())
                     item['pubdate'] = pubdate
 
+                item['item_id'] = str(uuid4())
+                item['source'] = response.url
                 item['link'] = entry.link
                 item['country'] = '#' if response.meta['country'] is None else response.meta['country']
                 item['language'] = '#' if response.meta['language'] is None else response.meta['language']
+                item['title'] = lxml.html.fromstring(entry.title).text
                 item['description'] = entry.description
-                item['item_id'] = str(uuid4())
                 item['region'] = self.region
                 request = Request(
                     entry.link,

@@ -78,12 +78,14 @@ class WestAsiaNewsSpider(BaseNewsSpider):
     def parse_daily_star(self, response):
         item = response.meta['item']
         print item['link']
-        # Open new window and load article in it
-        profile = webdriver.FirefoxProfile()
-        profile.set_preference('toolkit.startup.max_resumed_crashes', -1);
-        driver = webdriver.Firefox(profile)
-        driver.get(item['link'])
+
         try:
+            # Open new window and load article in it
+            profile = webdriver.FirefoxProfile()
+            profile.set_preference('toolkit.startup.max_resumed_crashes', -1);
+            driver = webdriver.Firefox(profile)
+            driver.get(item['link'])
+
             # Wait until dynamically loaded element appears
             WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, '//div[@id="divDetails"]')))
 

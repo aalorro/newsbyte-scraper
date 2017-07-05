@@ -43,7 +43,7 @@ class AfricaNewsSpider(BaseNewsSpider):
         ('http://mubasher.aljazeera.net/Services/Rss/?K=MjAwODEwNTEyNTA1MzQyNTY4OUFDU0tFWTEyM0FqQ21zV2ViAA==', 'parse_common', {'country': 'Egypt', 'language': 'Arabic', 'method': 'parse_mubasher', 'xpath': None}),  # Egypt
         ('http://addisfortune.net/content/fortune-news/', 'parse_fortunelinks', {'country': 'Ethiopia', 'language': 'English', 'method': 'parse_fortunecontent', 'xpath': None}),  # Ethiopia
         ('http://allafrica.com/tools/headlines/rdf/ethiopia/headlines.rdf', 'parse_common', {'country': 'Ethiopia', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Ethiopia
-        ('https://www.tesfanews.net/feed/', 'parse_common', {'country': 'Eritrea', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="entry-content"]/p'}),  # Eritrea
+        ('https://www.tesfanews.net/feed/', 'parse_common', {'country': 'Eritrea', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry-content"]/p'}),  # Eritrea
         ('http://www.farajat.net/ar/feed', 'parse_common', {'country': 'Eritrea', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="post"]/p'}),  # Eritrea
         ('http://www.gabonews.com/spip.php?page=backend&id_rubrique=1', 'parse_common', {'country': 'Gabon', 'language': 'French', 'method': 'parse_gabon', 'xpath': None}),  # Gabon
         ('http://www.gabonews.com/spip.php?page=backend&id_rubrique=2', 'parse_common', {'country': 'Gabon', 'language': 'English', 'method': 'parse_gabon', 'xpath': None}),  # Gabon
@@ -60,7 +60,7 @@ class AfricaNewsSpider(BaseNewsSpider):
         ('http://www.nyasatimes.com/feed/', 'parse_common', {'country': 'Malawi', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry-content"]//p/node()'}),  # Malawi
         ('http://malawi24.com/feed/', 'parse_common', {'country': 'Malawi', 'language': 'English', 'method': method, 'xpath': '//div[@class="left-col-content"]/p'}),  # Malawi
         ('http://allafrica.com/tools/headlines/rdf/mauritania/headlines.rdf', 'parse_common', {'country': 'Mauritania', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Mauritania
-        ('http://www.alakhbar.info/news.feed?type=rss', 'parse_common', {'country': 'Mauritania', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="item-page"]/p'}),  # Mauritania
+        ('http://www.alakhbar.info/?q=rss.xml', 'parse_common', {'country': 'Mauritania', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="field-items"]/div/p'}),  # Mauritania
         ('http://www.leconomiste.com/rss-leconomiste', 'parse_common', {'country': 'Morocco', 'language': 'French', 'method': method, 'xpath': '//div[@property="content:encoded"]/p'}),  # Morroco
         ('http://www.ahdath.info/?feed=rss2', 'parse_common', {'country': 'Morocco', 'language': 'Arabic', 'method': method, 'xpath': '//article/p'}),  # Morroco
         ('http://allafrica.com/tools/headlines/rdf/mozambique/headlines.rdf', 'parse_common', {'country': 'Mozambique', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Mozambique
@@ -188,7 +188,6 @@ class AfricaNewsSpider(BaseNewsSpider):
 
     def parse_mubasher(self, response):
         item = response.meta['item']
-        print item
 
         try:
             nodes = response.xpath('//div[contains(@class, "field--name-field-ajmn-summary")]').extract()
