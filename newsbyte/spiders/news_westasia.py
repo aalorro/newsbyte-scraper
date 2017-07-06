@@ -13,10 +13,11 @@ from uuid import uuid4
 from dateutil.parser import parse
 from newsbyte.items import NewsbyteItem
 
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+# Commented while selenium is still causing errors
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
+# from selenium.webdriver.support import expected_conditions as EC
 
 
 class WestAsiaNewsSpider(BaseNewsSpider):
@@ -31,7 +32,8 @@ class WestAsiaNewsSpider(BaseNewsSpider):
         ('http://www.almadapaper.net/rss/', 'parse_common', {'country': 'Iraq', 'language': 'Arabic', 'method': 'parse_almada', 'xpath': 'West Asia'}),  # Iraq
         ('http://feeds.iraqsun.com/rss/c31d0aaa23b24a75', 'parse_common', {'country': 'Iraq', 'language': 'English', 'method': method, 'xpath': '//div[@class="banner-text"]/p'}),  # Iraq
         ('http://www.aljoumhouria.com/news/rss', 'parse_common', {'country': 'Lebanon', 'language': 'Arabic', 'method': 'parse_aljoum', 'xpath': None}),  # Lebanon
-        ('http://www.dailystar.com.lb/RSS.aspx?live=1', 'parse_common', {'country': 'Lebanon', 'language': 'English', 'method': 'parse_daily_star', 'xpath': None}),  # Lebanon
+        # ('http://www.dailystar.com.lb/RSS.aspx?live=1', 'parse_common', {'country': 'Lebanon', 'language': 'English', 'method': 'parse_daily_star', 'xpath': None}),  # Lebanon dynamic content
+        ('http://www.dailystar.com.lb/RSS.aspx?live=1', 'parse_common', {'country': 'Lebanon', 'language': 'English', 'method': method, 'xpath': '//div[@id="divDetails"]/p'}),  # Lebanon
         ('http://alwatan.com/feed', 'parse_common', {'country': 'Oman', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Oman
         ('http://www.muscatdaily.com/rss/feed/Muscat_Daily_Oman_News', 'parse_common', {'country': 'Oman', 'language': 'English', 'method': 'parse_muscat', 'xpath': None}),  # Oman
         ('http://english.pnn.ps/feed/', 'parse_common', {'country': 'Palestine', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Palestine
@@ -75,6 +77,7 @@ class WestAsiaNewsSpider(BaseNewsSpider):
 
         return item
 
+    # Scrapes dynamic content of Daily Star news site
     def parse_daily_star(self, response):
         item = response.meta['item']
         print item['link']
