@@ -74,8 +74,8 @@ class BaseNewsSpider(Spider):
         for entry in feed.entries:
             try:
                 item = NewsbyteItem()
-                attributes = entry.keys()
 
+                attributes = entry.keys()
                 if 'published_parsed' in attributes:
                     pubdate = entry.published_parsed
                 else:
