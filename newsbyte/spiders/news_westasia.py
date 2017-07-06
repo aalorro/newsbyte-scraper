@@ -28,7 +28,7 @@ class WestAsiaNewsSpider(BaseNewsSpider):
     region = 'West Asia'
     method = BaseNewsSpider.method
     start_urls = [
-        ('http://www.almadapaper.net/rss/', 'parse_common', {'country': 'Iraq', 'language': 'Arabic', 'method': 'parse_almada', 'xpath': 'West Asia'}),  # Iraq
+        ('http://www.almadapaper.net/rss/', 'parse_common', {'country': 'Iraq', 'language': 'Arabic', 'method': 'parse_almada', 'xpath': None}),  # Iraq
         ('http://feeds.iraqsun.com/rss/c31d0aaa23b24a75', 'parse_common', {'country': 'Iraq', 'language': 'English', 'method': method, 'xpath': '//div[@class="banner-text"]/p'}),  # Iraq
         ('http://www.aljoumhouria.com/news/rss', 'parse_common', {'country': 'Lebanon', 'language': 'Arabic', 'method': 'parse_aljoum', 'xpath': None}),  # Lebanon
         ('http://www.dailystar.com.lb/RSS.aspx?live=1', 'parse_common', {'country': 'Lebanon', 'language': 'English', 'method': 'parse_daily_star', 'xpath': None}),  # Lebanon
@@ -76,14 +76,12 @@ class WestAsiaNewsSpider(BaseNewsSpider):
         return item
 
     def parse_daily_star(self, response):
+        # Scrapes dynamic content of Daily Star news site
         item = response.meta['item']
-        print item['link']
 
         try:
             # Open new window and load article in it
-            profile = webdriver.FirefoxProfile()
-            profile.set_preference('toolkit.startup.max_resumed_crashes', -1);
-            driver = webdriver.Firefox(profile)
+            driver = webdriver.PhantomJS()
             driver.get(item['link'])
 
             # Wait until dynamically loaded element appears
@@ -107,11 +105,10 @@ class WestAsiaNewsSpider(BaseNewsSpider):
                 driver.close()
                 return None
 
-            print item
             driver.close()
             return item
         except Exception as e:
-            print e
+            print '%s: %s' % (type(e), e)
             driver.close()
 
     def parse_muscat(self, response):
@@ -141,7 +138,6 @@ class WestAsiaNewsSpider(BaseNewsSpider):
             try:
                 item = NewsbyteItem()
                 item['source'] = response.url
-                print item['source']
                 item['title'] = lxml.html.fromstring(entry.title).text
                 pubdate = entry.published
                 if not isinstance(pubdate, unicode):  # if pubdate is not unicode
@@ -150,7 +146,6 @@ class WestAsiaNewsSpider(BaseNewsSpider):
                     if pubdate.tm_year < 2000:
                         pubdate = time.localtime()
                     elif time.localtime().tm_yday - pubdate.tm_yday > 7:
-                        print 'out'
                         continue
                     else:
                         item['pubdate'] = time.mktime(pubdate)
@@ -165,7 +160,6 @@ class WestAsiaNewsSpider(BaseNewsSpider):
                 item['description'] = entry.description
                 item['item_id'] = str(uuid4())
                 item['region'] = self.region
-                print item
                 request = Request(
                     item['link'],
                     callback=getattr(self, response.meta['method']),
