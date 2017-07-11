@@ -95,7 +95,8 @@ class BaseNewsSpider(Spider):
                     else:
                         item['pubdate'] = time.mktime(pubdate)
                 else:
-                    if response.url == 'http://mubasher.aljazeera.net/rss.xml':
+                    if response.url == 'http://mubasher.aljazeera.net/rss.xml' or \
+                        response.url == 'http://www.almadapaper.net/rss/':
                         pubdate = parse(pubdate, fuzzy=True, dayfirst=False)
                     else:
                         pubdate = parse(pubdate, fuzzy=True, dayfirst=True)
