@@ -20,7 +20,7 @@ class SouthAmericaNewsSpider(BaseNewsSpider):
         ('http://www.buenosairesherald.com/articles/rss.aspx', 'parse_common', {'country': 'Argentina', 'language': 'English', 'method': 'parse_buenosaires', 'xpath': None}),  # Argentina
         ('http://rss.eldiario.net/nacional.php', 'parse_common', {'country': 'Bolivia', 'language': 'Spanish', 'method': method, 'xpath': '//div[@class="nota_txt"]/p'}),  # Bolivia
         ('http://feeds.feedburner.com/TheRioTimes?format=xml', 'parse_common', {'country': 'Brazil', 'language': 'English', 'method': method, 'xpath': '//div[@class="td-post-content"]//p'}),  # Brazil
-        ('http://www.brasilpost.com.br/feeds/verticals/brazil/news.xml', 'parse_common', {'country': 'Brazil', 'language': 'Portuguese', 'method': method, 'xpath': '//div[@class="content"]/p'}),  # Brazil
+        ('http://www.huffpostbrasil.com/feeds/index.xml', 'parse_common', {'country': 'Brazil', 'language': 'Portuguese', 'method': method, 'xpath': '//div[contains(@class,"post-contents")]/p'}),  # Brazil
         ('http://www.elciudadano.cl/feed/', 'parse_common', {'country': 'Chile', 'language': 'Spanish', 'method': method, 'xpath': '//div[@class="the_content"]/p'}),  # Chile
         ('http://www.nuevodiario.co/feed/', 'parse_common', {'country': 'Colombia', 'language': 'Spanish', 'method': method, 'xpath': '//div[@class="td-post-content td-pb-padding-side"]/p'}),  # Colombia
         ('http://feeds.feedburner.com/thecitypaperbogota?format=xml', 'parse_common', {'country': 'Colombia', 'language': 'English', 'method': method, 'xpath': '//div[@class="td-post-content"]//p'}),  # Colombia

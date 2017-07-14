@@ -17,7 +17,7 @@ class CentralAmericaNewsSpider(BaseNewsSpider):
     method = BaseNewsSpider.method
     start_urls = [
         ('http://www.listindiario.com/rss/portada/', 'parse_common', {'country': 'Dominican Republic', 'language': 'Spanish', 'method': method, 'xpath': '//div[@id="ArticleBody"]/p'}),  # Dominican Republic
-        ('http://www.dominicantoday.com/rss/local/', 'parse_common', {'country': 'Dominican Republic', 'language': 'English', 'method': 'parse_dominican', 'xpath': None}),  # Dominican Republic
+        ('http://feeds.feedburner.com/DominicaNewsOnline/', 'parse_common', {'country': 'Dominican Republic', 'language': 'English', 'method': method, 'xpath': '//div[@id="postContent"]/p'}),  # Dominican Republic
         ('http://www.elsalvadornoticias.net/feed/', 'parse_common', {'country': 'El Salvador', 'language': 'Spanish', 'method': 'parse_elsalvador', 'xpath': None}),  # El Salvador
         ('http://www.haitilibre.com/rss-flash-en.xml', 'parse_common', {'country': 'Haiti', 'language': 'English', 'method': method, 'xpath': '//td[@width="100%"]/text()[not(ancestor::span)]'}),  # Haiti
         ('https://www.haitilibre.com/rss-flash.xml', 'parse_common', {'country': 'Haiti', 'language': 'French', 'method': method, 'xpath': '//td[@width="100%"]/text()[not(ancestor::span)]'}),  # Haiti
