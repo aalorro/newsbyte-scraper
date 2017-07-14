@@ -39,7 +39,7 @@ class WestAsiaNewsSpider(BaseNewsSpider):
         ('http://www.aljazeera.net/aljazeerarss/3c66e3fb-a5e0-4790-91be-ddb05ec17198/4e9f594a-03af-4696-ab98-880c58cd6718', 'parse_common', {'country': 'Saudi Arabia', 'language': 'Arabic', 'method': method, 'xpath': '//div[contains(@class,"article-body")]/p'}),  # Saudi Arabia
         ('http://www.arabnews.com/rss.xml', 'parse_common', {'country': 'Saudi Arabia', 'language': 'English', 'method': method, 'xpath': '//div[contains(@class,"entry-content")]/div[contains(@class,"show-for-small-only")]'}),  # Saudi Arabia
         ('http://www.arabnews.com/cat/1/rss.xml', 'parse_common', {'country': 'Saudi Arabia', 'language': 'English', 'method': method, 'xpath': '//div[contains(@class,"entry-content")]/div[contains(@class,"show-for-small-only")]'}),  # Saudi Arabia
-        ('http://www.elfagr.org/rss.aspx', 'parse_common', {'country': 'Yemen', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="ni-content"]'}),  # Yemen
+        ('https://www.al-tagheer.com/rss.php?cat=1', 'parse_common', {'country': 'Yemen', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="story_text"]/p'}),  # Yemen
         ('http://www.saba.ye/en/rsscatfeed.php?category=14', 'parse_saba', {'country': 'Yemen', 'language': 'English', 'method': method, 'xpath': '//div[@class="mainText"]'}),  # Yemen
     ]
 
