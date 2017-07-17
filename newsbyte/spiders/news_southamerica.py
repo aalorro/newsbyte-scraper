@@ -58,4 +58,3 @@ class SouthAmericaNewsSpider(BaseNewsSpider):
             return None
 
         return item
-
