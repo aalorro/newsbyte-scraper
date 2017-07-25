@@ -25,7 +25,7 @@ class SouthAsiaNewsSpider(BaseNewsSpider):
         ('http://www.ittefaq.com.bd/rss.xml', 'parse_common', {'country': 'Bangladesh', 'language': 'Bengali', 'method': method, 'xpath': '//div[@class="details"]//span/text()'}),  # Bangladesh
         ('http://bdnews24.com/?widgetName=rssfeed&widgetId=1150&getXmlFeed=true', 'parse_common', {'country': 'Bangladesh', 'language': 'English', 'method': method, 'xpath': '//div[@class="custombody print-only"]/p'}),  # Bangladesh
         ('http://www.thedailystar.net/newspaper', 'parse_dailystarlinks', {'country': 'Bangladesh', 'language': 'English', 'method': 'parse_dailystarcontent', 'xpath': None}),  # Bangladesh
-        ('http://www.dzkuensel.bt/', 'parse_kuensellinks', {'country': 'Bhutan', 'language': 'Dzongkha', 'method': method, 'xpath': '//article/p'}),  # Bhutan
+        ('http://www.bbs.bt/dzongkha/', 'parse_bbs_links', {'country': 'Bhutan', 'language': 'Dzongkha', 'method': 'parse_bbs_content', 'xpath': None}),  # Bhutan
         ('http://www.kuenselonline.com/feed/', 'parse_common', {'country': 'Bhutan', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Bhutan
         ('http://www.bhaskar.com/rss-feed/2322/', 'parse_common', {'country': 'India', 'language': 'Hindi', 'method': method, 'xpath': '//div[@class="ba_cntebt_text introFirst"]/div'}),  # India
         ('http://rss.jagran.com/rss/news/national.xml', 'parse_common', {'country': 'India', 'language': 'Hindi', 'method': method, 'xpath': '//div[@class="article-content"]/p'}),  # India
@@ -98,42 +98,67 @@ class SouthAsiaNewsSpider(BaseNewsSpider):
 
         return item
 
-    def parse_kuensellinks(self, response):
+    def parse_bbs_links(self, response):
         """
         Does not use an RSS Feed.
+        Scrapes site for links to articles.
         """
-        for article in response.xpath('//section/article'):
-            item = NewsbyteItem()
-            # extract the link from returned list
-            link = ''.join(article.xpath('./h2/a/@href').extract())
-            # extract the description from returned list
-            description = ''.join(article.xpath('./p').extract())
-            # extract the pubdate from returned list
-            pubdate = ''.join(article.xpath('./div[@class="post-meta"]/span[@class="post-date"]/text()').extract())
-            # convert from unicode to datetime object
-            pubdate = parse(pubdate)
-            # convert to unix timestamp
-            pubdate = time.mktime(pubdate.timetuple())
 
-            item['source'] = response.url
-            item['link'] = link
-            # extract article title from returned list and strip trailing whitespace
-            item['title'] = ''.join(article.xpath('./h2/a/text()').extract()).strip()
-            item['description'] = tools.strip_p(tools.strip_links2(description)).strip()
-            item['pubdate'] = pubdate
-            item['country'] = '#' if response.meta['country'] is None else response.meta['country']
-            item['item_id'] = str(uuid4())
-            item['language'] = '#' if response.meta['language'] is None else response.meta['language']
-            item['region'] = self.region
-            request = Request(
-                link,
-                callback=getattr(self, response.meta['method']),
-                dont_filter=response.meta.get('dont_filter', False)
-            )
-            request.meta['item'] = item
-            request.meta['xpath'] = response.meta['xpath']
+        # Gets featured posts
+        featured = response.xpath('//div[@class="featuredPost2"]')
+        # Gets other posts
+        others = response.xpath('//div[@class="midColPost"]')
+        links = featured + others
+        for link in links:
+            try:
+                item = NewsbyteItem()
+                item['source'] = response.url
+                url = link.xpath('a/@href').extract()
+                item['link'] = url[0]
+                title = link.xpath('h2/a/@title').extract()
+                item['title'] = title[0]
+                item['country'] = '#' if response.meta['country'] is None else response.meta['country']
+                item['item_id'] = str(uuid4())
+                item['language'] = '#' if response.meta['language'] is None else response.meta['language']
+                item['region'] = self.region
+                pubdate = time.localtime()  # if there is no pubdate the time it is scraped is used
+                item['pubdate'] = time.mktime(pubdate)
+                description = link.xpath('p').extract()
+                item['description'] = description[0]
+                request = Request(
+                    item['link'],
+                    callback=getattr(self, response.meta['method']),
+                    dont_filter=response.meta.get('dont_filter', False)
+                )
+                request.meta['item'] = item
 
-            yield request
+                yield request
+            except Exception as e:
+                print e
+
+    def parse_bbs_content(self, response):
+        """
+        Scrapes article content.
+        """
+        try:
+            item = response.meta['item']
+
+            nodes = response.xpath('//div[@class="post"]/p').extract()
+            nodes = self.clean_html_tags(nodes)
+            item['description'] = self.clean_description(item['description'])
+
+            if item['description'] == '':
+                description = nodes[0]
+                item['description'] = (description[:512] + '...') if len(description) > 512 else description
+
+            item['article'] = self.newline_join_lst(nodes)
+            if item['article'] == '':
+                print "No article"
+                return None
+
+            return item
+        except Exception as e:
+            print e
 
     def parse_mihaaru_links(self, response):
         """
