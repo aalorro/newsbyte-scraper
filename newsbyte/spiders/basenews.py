@@ -75,6 +75,7 @@ class BaseNewsSpider(Spider):
             try:
                 item = NewsbyteItem()
 
+                # Get published date of article
                 attributes = entry.keys()
                 if 'published_parsed' in attributes:
                     pubdate = entry.published_parsed
@@ -87,14 +88,22 @@ class BaseNewsSpider(Spider):
                 if pubdate is None:
                     pubdate = time.localtime()  # if there is no pubdate the time it is scraped is used
                 if not isinstance(pubdate, unicode):  # if pubdate is not unicode
+                    # Fix Sri Lanka native dates
+                    if response.url == 'http://www.lankadeepa.lk/rss/latest_news/1':
+                        date = entry.published
+                        split_date = date.split()
+                        # Create new pubdate from published_parsed and published dates
+                        pubdate = time.strptime(str(pubdate.tm_year)+" "+str(pubdate.tm_mon)+" "+split_date[3]+" "+split_date[5], "%Y %m %d %H:%M")
                     # fix wrong dates
-                    if pubdate.tm_year < 2000:
+                    if pubdate.tm_year < 2000: # I don't know what this is for
                         pubdate = time.localtime()
-                    elif time.localtime().tm_yday - pubdate.tm_yday > 7:
+                    elif time.localtime().tm_yday - pubdate.tm_yday > 7: # Checks if article is older than days
+                        print "outdated"
                         continue
                     else:
                         item['pubdate'] = time.mktime(pubdate)
                 else:
+                    # Certain feeds use mm/dd/yyyy format instead of dd/mm/yyyy
                     if response.url == 'http://mubasher.aljazeera.net/rss.xml' or \
                         response.url == 'http://www.almadapaper.net/rss/':
                         pubdate = parse(pubdate, fuzzy=True, dayfirst=False)
