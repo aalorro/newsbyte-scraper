@@ -17,7 +17,7 @@ class SouthAmericaNewsSpider(BaseNewsSpider):
     method = BaseNewsSpider.method
     start_urls = [
         ('http://www.ambito.com/rss/noticiasp.asp', 'parse_common', {'country': 'Argentina', 'language': 'Spanish', 'method': 'parse_ambito', 'xpath': None}),  # Argentina
-        ('http://www.buenosairesherald.com/articles/rss.aspx', 'parse_common', {'country': 'Argentina', 'language': 'English', 'method': 'parse_buenosaires', 'xpath': None}),  # Argentina
+        ('http://feeds.argentinastar.com/rss/d9ed072d737073b4', 'parse_common', {'country': 'Argentina', 'language': 'English', 'method': method, 'xpath': '//div[@class="banner-text"]/p'}),  # Argentina
         ('http://rss.eldiario.net/nacional.php', 'parse_common', {'country': 'Bolivia', 'language': 'Spanish', 'method': method, 'xpath': '//div[@class="nota_txt"]/p'}),  # Bolivia
         ('http://feeds.feedburner.com/TheRioTimes?format=xml', 'parse_common', {'country': 'Brazil', 'language': 'English', 'method': method, 'xpath': '//div[@class="td-post-content"]//p'}),  # Brazil
         ('http://www.huffpostbrasil.com/feeds/index.xml', 'parse_common', {'country': 'Brazil', 'language': 'Portuguese', 'method': method, 'xpath': '//div[contains(@class,"post-contents")]/p'}),  # Brazil
@@ -40,20 +40,6 @@ class SouthAmericaNewsSpider(BaseNewsSpider):
         if item['description'] == '':
             item['description'] = re.search(r'.*?\n', nodes).group(0).strip()
         item['article'] = nodes
-        if item['article'] == '':
-            return None
-
-        return item
-
-    def parse_buenosaires(self, response):
-        item = response.meta['item']
-        nodes = response.xpath('//div[@id="nota_despliegue"]//p').extract()
-
-        nodes = self.clean_html_tags(nodes)
-
-        item['article'] = self.newline_join_lst(nodes)
-        if item['description'] == '':
-            item['description'] = self.clean_description(nodes[0])
         if item['article'] == '':
             return None
 
