@@ -29,11 +29,15 @@ class AfricaNewsSpider(BaseNewsSpider):
         ('http://www.liberte-algerie.com/article/feed', 'parse_common', {'country': 'Algeria', 'language': 'French', 'method': method, 'xpath': '//div[@id="text_core"]/p'}),  # Algeria
         ('http://jornaldeangola.sapo.ao/feeds/articles/', 'parse_common', {'country': 'Angola', 'language': 'Portuguese', 'method': method, 'xpath': '//article/p'}),  # Angola
         ('http://allafrica.com/tools/headlines/rdf/angola/headlines.rdf', 'parse_common', {'country': 'Angola', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Angola
-        ('http://www.mmegi.bw/2013_website/widgets/rss/rss.php?wid=1', 'parse_common', {'country': 'Botswana', 'language': 'Mixed', 'method': method, 'xpath': '//div[@class="text"]/p'}),  # Botswana
+        ('http://www.mmegi.bw/index.php', 'parse_megi_links', {'country': 'Botswana', 'language': 'English', 'method': 'parse_megi_content', 'xpath': '//div[@class="text"]/p'}),  # Botswana
         ('http://allafrica.com/tools/headlines/rdf/burkinafaso/headlines.rdf', 'parse_common', {'country': 'Burkina Faso', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Burkina Faso
         ('http://www.lefaso.net/spip.php?page=backend', 'parse_common', {'country': 'Burkina Faso', 'language': 'French', 'method': method, 'xpath': '//div[@class="texte entry-content"]/p/text()'}),  # Burkina Faso
         ('http://www.cameroonjournal.com/feed/', 'parse_common', {'country': 'Cameroon', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry-content clearfix"]/p'}),  # Cameroon
         ('http://fr.allafrica.com/tools/headlines/rdf/cameroon/headlines.rdf', 'parse_common', {'country': 'Cameroon', 'language': 'French', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Cameroon
+        ('http://www.inforpress.publ.cv/category/politics/?lang=en', 'parse_inforpress_links', {'country': 'Cape Verde', 'language': 'English', 'method': 'parse_inforpress_content', 'xpath': None}),  # Cape Verde
+        ('http://www.inforpress.publ.cv/category/economy/?lang=en', 'parse_inforpress_links', {'country': 'Cape Verde', 'language': 'English', 'method': 'parse_inforpress_content', 'xpath': None}),  # Cape Verde
+        ('http://www.inforpress.publ.cv/category/culture/?lang=en', 'parse_inforpress_links', {'country': 'Cape Verde', 'language': 'English', 'method': 'parse_inforpress_content', 'xpath': None}),  # Cape Verde
+        ('http://www.inforpress.publ.cv/category/sports/?lang=en', 'parse_inforpress_links', {'country': 'Cape Verde', 'language': 'English', 'method': 'parse_inforpress_content', 'xpath': None}),  # Cape Verde
         ('http://www.asemana.publ.cv/spip.php?rubrique2&ak=1', 'parse_asemanalinks', {'country': 'Cape Verde', 'language': 'Portuguese', 'method': 'parse_asemanacontent', 'xpath': None}),  # Cape Verde
         ('http://acpcongo.com/acp/category/nation/feed/', 'parse_common', {'country': 'Congo-Kinshasa', 'language': 'French', 'method': method, 'xpath': '//div[@class="entry-content"]/p'}),  # Congo-Kinshasa
         ('http://groupelavenir.org/category/actualites/', 'parse_lavenirlinks', {'country': 'Congo-Kinshasa', 'language': 'French', 'method': 'parse_lavenircontent', 'xpath': None}),  # Congo-Kinshasa
@@ -43,6 +47,7 @@ class AfricaNewsSpider(BaseNewsSpider):
         ('http://mubasher.aljazeera.net/Services/Rss/?K=MjAwODEwNTEyNTA1MzQyNTY4OUFDU0tFWTEyM0FqQ21zV2ViAA==', 'parse_common', {'country': 'Egypt', 'language': 'Arabic', 'method': 'parse_mubasher', 'xpath': None}),  # Egypt
         ('http://addisfortune.net/content/fortune-news/', 'parse_fortunelinks', {'country': 'Ethiopia', 'language': 'English', 'method': 'parse_fortunecontent', 'xpath': None}),  # Ethiopia
         ('http://allafrica.com/tools/headlines/rdf/ethiopia/headlines.rdf', 'parse_common', {'country': 'Ethiopia', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Ethiopia
+        ('http://ethiopiazare.com/amharic/the-news-50', 'parse_ethiopiazare_links', {'country': 'Ethiopia', 'language': 'Amharic', 'method': 'parse_ethiopiazare_content', 'xpath': None}),  # Ethiopia
         ('https://www.tesfanews.net/feed/', 'parse_common', {'country': 'Eritrea', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry-content"]/p'}),  # Eritrea
         ('http://www.farajat.net/ar/feed', 'parse_common', {'country': 'Eritrea', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="post"]/p'}),  # Eritrea
         ('http://www.gabonews.com/spip.php?page=backend&id_rubrique=1', 'parse_common', {'country': 'Gabon', 'language': 'French', 'method': 'parse_gabon', 'xpath': None}),  # Gabon
@@ -65,7 +70,8 @@ class AfricaNewsSpider(BaseNewsSpider):
         ('http://www.ahdath.info/?feed=rss2', 'parse_common', {'country': 'Morocco', 'language': 'Arabic', 'method': method, 'xpath': '//article/p'}),  # Morroco
         ('http://allafrica.com/tools/headlines/rdf/mozambique/headlines.rdf', 'parse_common', {'country': 'Mozambique', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Mozambique
         ('http://www.verdade.co.mz/index.php?option=com_mediarss&feed_id=1&format=raw', 'parse_common', {'country': 'Mozambique', 'language': 'Portuguese', 'method': method, 'xpath': '//td[@valign="top"]/p/node()'}),  # Mozambique
-        ('https://www.newera.com.na/feed/', 'parse_common', {'country': 'Namibia', 'language': 'Mixed', 'method': method, 'xpath': '//article/p'}),  # Namibia
+        ('https://www.republikein.com.na/nuus', 'parse_republikein_links', {'country': 'Namibia', 'language': 'Afrikaan', 'method': 'parse_republikein_content', 'xpath': None}),  # Namibia
+        ('https://www.newera.com.na/feed/', 'parse_common', {'country': 'Namibia', 'language': 'English', 'method': method, 'xpath': '//article/p'}),  # Namibia
         ('http://www.namibian.com.na/rssfeed.php', 'parse_common', {'country': 'Namibia', 'language': 'English', 'method': method, 'xpath': '//div[@class="info"]/article/p'}),  # Namibia
         ('http://allafrica.com/tools/headlines/rdf/niger/headlines.rdf', 'parse_common', {'country': 'Niger', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Niger
         ('http://www.tamtaminfo.com/feed/', 'parse_common', {'country': 'Niger', 'language': 'French', 'method': 'parse_tamtaminfo', 'xpath': None}),  # Niger
@@ -79,7 +85,8 @@ class AfricaNewsSpider(BaseNewsSpider):
         ('http://www.heraldlive.co.za/feed/', 'parse_common', {'country': 'South Africa', 'language': 'English', 'method': 'parse_herald', 'xpath': None}),  # South Africa
         ('http://feeds.news24.com/articles/news24/SouthAfrica/rss', 'parse_common', {'country': 'South Africa', 'language': 'English', 'method': 'parse_news24', 'xpath': None}),  # South Africa
         ('http://www.southsudannation.com/feed/', 'parse_common', {'country': 'South Sudan', 'language': 'English', 'method': 'parse_southsudan', 'xpath': None}),  # South Sudan
-        ('http://mzalendo.net/feed', 'parse_common', {'country': 'Tanzania', 'language': 'Swahili', 'method': method, 'xpath': '//div[@id="content"]/p'}),  # Tanzania
+        ('http://mzalendo.net/feed', 'parse_common', {'country': 'Tanzania', 'language': 'Swahili', 'method': method, 'xpath': '//div[@class="article-content"]/p'}),  # Tanzania
+        ('http://www.raiamwema.co.tz/', 'parse_raiamwema_links', {'country': 'Tanzania', 'language': 'Swahili', 'method': 'parse_raiamwema_content', 'xpath': None}),  # Tanzania
         ('http://24tanzania.com/feed/', 'parse_common', {'country': 'Tanzania', 'language': 'English', 'method': method, 'xpath': '//div[@class="entry"]/p'}),  # Tanzania
         ('http://allafrica.com/tools/headlines/rdf/tanzania/headlines.rdf', 'parse_common', {'country': 'Tanzania', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Tanzania
         ('http://allafrica.com/tools/headlines/rdf/uganda/headlines.rdf', 'parse_common', {'country': 'Uganda', 'language': 'English', 'method': method, 'xpath': '//div[@class="story-body"]/p'}),  # Uganda
@@ -90,6 +97,314 @@ class AfricaNewsSpider(BaseNewsSpider):
     def __init__(self, domain=None):
         super(AfricaNewsSpider, self).__init__()
         self.domain = domain
+
+    def parse_megi_links(self, response):
+        """
+        Does not use an RSS Feed.
+        Scrapes site for links to articles.
+        """
+
+        # Gets latest posts
+        latest = response.xpath('//div[@class="latest_widget_blurb_wrapper"]')
+
+        # Get header of lifestyle news
+        lifestyle = response.xpath('//div[@class="homepage_article_widget_section_title" and text()="Lifestyle"]')
+        # Gets front page posts before lifestyle news
+        news = lifestyle.xpath('preceding::div[@class="special_smallstory_white_wrappers"]')
+
+        # Combines latest news nad other news
+        links = latest + news
+        for link in links:
+            try:
+                item = NewsbyteItem()
+                item['source'] = response.url
+                url = link.xpath('div/a/@href').extract()
+                item['link'] = response.urljoin(url[0])
+                title = link.xpath('div/a/text()').extract()
+                item['title'] = title[0]
+                item['country'] = '#' if response.meta['country'] is None else response.meta['country']
+                item['item_id'] = str(uuid4())
+                item['language'] = '#' if response.meta['language'] is None else response.meta['language']
+                item['region'] = self.region
+                pubdate = time.localtime()  # if there is no pubdate the time it is scraped is used
+                item['pubdate'] = time.mktime(pubdate)
+                description = link.xpath('div/text()').extract()
+                item['description'] = description[1]
+                request = Request(
+                    item['link'],
+                    callback=getattr(self, response.meta['method']),
+                    dont_filter=response.meta.get('dont_filter', False)
+                )
+                request.meta['item'] = item
+
+                yield request
+            except Exception as e:
+                print e
+
+    def parse_megi_content(self, response):
+        """
+        Scrapes article content.
+        """
+        try:
+            item = response.meta['item']
+
+            date = response.xpath('//td[@class="authors_date"]/text()').extract()
+            date = date[0]
+            date = parse(date, fuzzy=True)
+            item['pubdate'] = time.mktime(date.timetuple())
+
+            nodes = response.xpath('//div[@class="content"]/div[@class="text"]/p').extract()
+            nodes = self.clean_html_tags(nodes)
+            item['description'] = self.clean_description(item['description'])
+
+            if item['description'] == '':
+                description = nodes[0]
+                item['description'] = (description[:512] + '...') if len(description) > 512 else description
+
+            item['article'] = self.newline_join_lst(nodes)
+            if item['article'] == '':
+                print "No article"
+                return None
+
+            return item
+        except Exception as e:
+            print e
+
+    def parse_inforpress_links(self, response):
+        """
+        Does not use an RSS Feed.
+        Scrapes site for links to articles.
+        """
+
+        # Gets latest posts
+        links = response.xpath('//article/div')
+        for link in links:
+            try:
+                item = NewsbyteItem()
+                item['source'] = response.url
+                url = link.xpath('header/h2/a/@href').extract()
+                item['link'] = url[0]
+                title = link.xpath('header/h2/a/@title').extract()
+                item['title'] = title[0]
+                item['country'] = '#' if response.meta['country'] is None else response.meta['country']
+                item['item_id'] = str(uuid4())
+                item['language'] = '#' if response.meta['language'] is None else response.meta['language']
+                item['region'] = self.region
+                pubdate = time.localtime()  # if there is no pubdate the time it is scraped is used
+                item['pubdate'] = time.mktime(pubdate)
+                description = link.xpath('div[contains(@class, "entry-content")]/p').extract()
+                item['description'] = description[0]
+                request = Request(
+                    item['link'],
+                    callback=getattr(self, response.meta['method']),
+                    dont_filter=response.meta.get('dont_filter', False)
+                )
+                request.meta['item'] = item
+
+                yield request
+            except Exception as e:
+                print e
+
+    def parse_inforpress_content(self, response):
+        """
+        Scrapes article content.
+        """
+        try:
+            item = response.meta['item']
+
+            nodes = response.xpath('//div[contains(@class, "entry-content")]/p').extract()
+            nodes = self.clean_html_tags(nodes)
+            item['description'] = self.clean_description(item['description'])
+
+            if item['description'] == '':
+                description = nodes[0]
+                item['description'] = (description[:512] + '...') if len(description) > 512 else description
+
+            item['article'] = self.newline_join_lst(nodes)
+            if item['article'] == '':
+                print "No article"
+                return None
+
+            return item
+        except Exception as e:
+            print e
+
+    def parse_ethiopiazare_links(self, response):
+        """
+        Does not use an RSS Feed.
+        Scrapes site for links to articles.
+        """
+
+        # Gets latest posts
+        links = response.xpath('//article')
+        for link in links:
+            try:
+                item = NewsbyteItem()
+                item['source'] = response.url
+                url = link.xpath('header/h1/a/@href').extract()
+                item['link'] = response.urljoin(url[0])
+                title = link.xpath('header/h1/a/text()').extract()
+                item['title'] = title[0]
+                item['country'] = '#' if response.meta['country'] is None else response.meta['country']
+                item['item_id'] = str(uuid4())
+                item['language'] = '#' if response.meta['language'] is None else response.meta['language']
+                item['region'] = self.region
+                pubdate = time.localtime()  # if there is no pubdate the time it is scraped is used
+                item['pubdate'] = time.mktime(pubdate)
+                description = link.xpath('p').extract()
+                item['description'] = description[0]
+                request = Request(
+                    item['link'],
+                    callback=getattr(self, response.meta['method']),
+                    dont_filter=response.meta.get('dont_filter', False)
+                )
+                request.meta['item'] = item
+
+                yield request
+            except Exception as e:
+                print e
+
+    def parse_ethiopiazare_content(self, response):
+        """
+        Scrapes article content.
+        """
+        try:
+            item = response.meta['item']
+
+            nodes = response.xpath('//div[@class="itemBody"]/span[@itemprop="articleBody"]/p').extract()
+            nodes = self.clean_html_tags(nodes)
+            item['description'] = self.clean_description(item['description'])
+
+            if item['description'] == '':
+                description = nodes[0]
+                item['description'] = (description[:512] + '...') if len(description) > 512 else description
+
+            item['article'] = self.newline_join_lst(nodes)
+            if item['article'] == '':
+                print "No article"
+                return None
+
+            return item
+        except Exception as e:
+            print e
+
+    def parse_republikein_links(self, response):
+        """
+        Does not use an RSS Feed.
+        Scrapes site for links to articles.
+        """
+
+        # Gets latest posts
+        links = response.xpath('//section[contains(@class, "item")]')
+        for link in links:
+            try:
+                item = NewsbyteItem()
+                item['source'] = response.url
+                url = link.xpath('h2/a/@href').extract()
+                item['link'] = url[0]
+                title = link.xpath('h2/a/text()').extract()
+                item['title'] = title[0]
+                item['country'] = '#' if response.meta['country'] is None else response.meta['country']
+                item['item_id'] = str(uuid4())
+                item['language'] = '#' if response.meta['language'] is None else response.meta['language']
+                item['region'] = self.region
+                pubdate = time.localtime()  # if there is no pubdate the time it is scraped is used
+                item['pubdate'] = time.mktime(pubdate)
+                description = link.xpath('div[@class="teaser"]/p').extract()
+                item['description'] = description[0]
+                request = Request(
+                    item['link'],
+                    callback=getattr(self, response.meta['method']),
+                    dont_filter=response.meta.get('dont_filter', False)
+                )
+                request.meta['item'] = item
+
+                yield request
+            except Exception as e:
+                print e
+
+    def parse_republikein_content(self, response):
+        """
+        Scrapes article content.
+        """
+        try:
+            item = response.meta['item']
+
+            nodes = response.xpath('//div[@id="post_content"]').extract()
+            nodes = self.clean_html_tags(nodes)
+            item['description'] = self.clean_description(item['description'])
+
+            if item['description'] == '':
+                description = nodes[0]
+                item['description'] = (description[:512] + '...') if len(description) > 512 else description
+
+            item['article'] = self.newline_join_lst(nodes)
+            if item['article'] == '':
+                print "No article"
+                return None
+
+            return item
+        except Exception as e:
+            print e
+
+    def parse_raiamwema_links(self, response):
+        """
+        Does not use an RSS Feed.
+        Scrapes site for links to articles.
+        """
+
+        # Gets latest posts
+        links = response.xpath('//div[@class="item-details"]')
+        for link in links:
+            try:
+                item = NewsbyteItem()
+                item['source'] = response.url
+                url = link.xpath('h3/a/@href').extract()
+                item['link'] = url[0]
+                title = link.xpath('h3/a/text()').extract()
+                item['title'] = title[0]
+                item['country'] = '#' if response.meta['country'] is None else response.meta['country']
+                item['item_id'] = str(uuid4())
+                item['language'] = '#' if response.meta['language'] is None else response.meta['language']
+                item['region'] = self.region
+                pubdate = time.localtime()  # if there is no pubdate the time it is scraped is used
+                item['pubdate'] = time.mktime(pubdate)
+                description = link.xpath('div[@class="td-excerpt"]/text()').extract()
+                item['description'] = description[0]
+                request = Request(
+                    item['link'],
+                    callback=getattr(self, response.meta['method']),
+                    dont_filter=response.meta.get('dont_filter', False)
+                )
+                request.meta['item'] = item
+
+                yield request
+            except Exception as e:
+                print e
+
+    def parse_raiamwema_content(self, response):
+        """
+        Scrapes article content.
+        """
+        try:
+            item = response.meta['item']
+
+            nodes = response.xpath('//div[@class="td-post-content"]/p').extract()
+            nodes = self.clean_html_tags(nodes)
+            item['description'] = self.clean_description(item['description'])
+
+            if item['description'] == '':
+                description = nodes[0]
+                item['description'] = (description[:512] + '...') if len(description) > 512 else description
+
+            item['article'] = self.newline_join_lst(nodes)
+            if item['article'] == '':
+                print "No article"
+                return None
+
+            return item
+        except Exception as e:
+            print e
 
     def parse_asemanalinks(self, response):
         """
