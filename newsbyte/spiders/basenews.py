@@ -94,10 +94,10 @@ class BaseNewsSpider(Spider):
                         split_date = date.split()
                         # Create new pubdate from published_parsed and published dates
                         pubdate = time.strptime(str(pubdate.tm_year)+" "+str(pubdate.tm_mon)+" "+split_date[3]+" "+split_date[5], "%Y %m %d %H:%M")
-                    # fix wrong dates
+                    # Fix wrong dates
                     if pubdate.tm_year < 2000: # I don't know what this is for
                         pubdate = time.localtime()
-                    elif time.localtime().tm_yday - pubdate.tm_yday > 7: # Checks if article is older than days
+                    elif time.localtime().tm_yday - pubdate.tm_yday > 7: # Checks if article is older than 7 days
                         print "outdated"
                         continue
                     else:
@@ -109,7 +109,12 @@ class BaseNewsSpider(Spider):
                         pubdate = parse(pubdate, fuzzy=True, dayfirst=False)
                     else:
                         pubdate = parse(pubdate, fuzzy=True, dayfirst=True)
-                    pubdate = time.mktime(pubdate.timetuple())
+
+                    # Checks if article is older than 7 days
+                    if time.localtime().tm_yday - pubdate.timetuple().tm_yday > 7:
+                        continue
+                    else:
+                        pubdate = time.mktime(pubdate.timetuple())
                     item['pubdate'] = pubdate
 
                 item['item_id'] = str(uuid4())

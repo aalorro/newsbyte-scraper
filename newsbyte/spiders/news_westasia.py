@@ -41,6 +41,8 @@ class WestAsiaNewsSpider(BaseNewsSpider):
         ('http://www.arabnews.com/cat/1/rss.xml', 'parse_common', {'country': 'Saudi Arabia', 'language': 'English', 'method': method, 'xpath': '//div[contains(@class,"entry-content")]/div[contains(@class,"show-for-small-only")]'}),  # Saudi Arabia
         ('https://www.al-tagheer.com/rss.php?cat=1', 'parse_common', {'country': 'Yemen', 'language': 'Arabic', 'method': method, 'xpath': '//div[@class="story_text"]/p'}),  # Yemen
         ('http://www.saba.ye/en/rsscatfeed.php?category=14', 'parse_saba', {'country': 'Yemen', 'language': 'English', 'method': method, 'xpath': '//div[@class="mainText"]'}),  # Yemen
+        ('http://www.saba.ye/en/rsscatfeed.php?category=15', 'parse_saba', {'country': 'Yemen', 'language': 'English', 'method': method, 'xpath': '//div[@class="mainText"]'}),  # Yemen
+        ('http://www.saba.ye/en/rsscatfeed.php?category=60', 'parse_saba', {'country': 'Yemen', 'language': 'English', 'method': method, 'xpath': '//div[@class="mainText"]'}),  # Yemen
     ]
 
     def __init__(self, domain=None):
@@ -203,7 +205,10 @@ class WestAsiaNewsSpider(BaseNewsSpider):
                         item['pubdate'] = time.mktime(pubdate)
                 else:
                     pubdate = parse(pubdate, fuzzy=True, dayfirst=True)
-                    pubdate = time.mktime(pubdate.timetuple())
+                    if time.localtime().tm_yday - pubdate.timetuple().tm_yday > 7:
+                        continue
+                    else:
+                        pubdate = time.mktime(pubdate.timetuple())
 
                 item['pubdate'] = pubdate
                 item['link'] = re.sub('sab.ye', 'saba.ye', entry.link, flags=re.M | re.I)
