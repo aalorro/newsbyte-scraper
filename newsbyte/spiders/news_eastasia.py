@@ -15,7 +15,7 @@ class EastAsiaNewsSpider(BaseNewsSpider):
     method = BaseNewsSpider.method
     start_urls = [
         ('http://www.sonin.mn/feed', 'parse_common', {'country': 'Mongolia', 'language': 'Mongolian', 'method': method, 'xpath': '//div[@id="text-show"]/div[@style="text-align: justify;"]'}),  # Mongolia
-        ('http://mongolia.gogo.mn/feed', 'parse_common', {'country': 'Mongolia', 'language': 'English', 'method': method, 'xpath': '//div[@class="newscontent-container"]/p/span'}),  # Mongolia
+        ('http://mongolia.gogo.mn/feed', 'parse_common', {'country': 'Mongolia', 'language': 'English', 'method': method, 'xpath': '//div[@class="newscontent-container"]/p'}),  # Mongolia
 
     ]
 
