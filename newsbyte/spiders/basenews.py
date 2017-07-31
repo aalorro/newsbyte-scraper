@@ -54,13 +54,6 @@ class BaseNewsSpider(Spider):
     def clean_description(self, text):
         return tools.html_unescape(tools.strip_tags(text)).strip()
 
-    def get_images(self, lst):
-        # get src attribute from img tag
-        lst = [tools.get_src_attr(element).strip() for element in lst if element]
-        # parse out empty elements
-        lst = [element for element in lst if element]
-        return lst
-
 ####################
 #### RSS parser ####
 ####################
@@ -166,7 +159,6 @@ class BaseNewsSpider(Spider):
                 thumb_xpath = response.meta['thumb_xpath']
                 try:
                     thumb_nodes = response.xpath(thumb_xpath).extract()
-                    thumb_nodes = self.get_images(thumb_nodes)
                     item['thumbnail'] = thumb_nodes[0]
                 except:
                     print 'No thumbnail'
