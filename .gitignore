@@ -19,6 +19,7 @@ htmlcov/
 log.txt
 *.json
 *.log
+env
 
 # Windows
 Thumbs.db
