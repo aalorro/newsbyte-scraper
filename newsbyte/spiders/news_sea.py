@@ -7,6 +7,7 @@ from .basenews import BaseNewsSpider
 import feedparser
 import time
 from uuid import uuid4
+from dateutil.parser import parse
 import newsbyte.tools as tools
 from newsbyte.items import NewsbyteItem
 
@@ -34,12 +35,14 @@ class SEANewsSpider(BaseNewsSpider):
         ('http://www.thestar.com.my/rss/news/nation/', 'parse_common', {'country': 'Malaysia', 'language': 'English', 'method': method, 'xpath': '//div[@class="story"]/p'}),  # Malaysia
         ('http://www.irrawaddy.org/feed', 'parse_common', {'country': 'Myanmar', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-entry pad"]/p'}),  # Myanmar
         ('http://feeds.bbci.co.uk/burmese/rss.xml', 'parse_common', {'country': 'Myanmar', 'language': 'Burmese', 'method': method, 'xpath': '//div[@property="articleBody"]/p'}),  # Myanmar
-        ('http://www.balita.net.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'Tagalog', 'method': method, 'xpath': '//div[@id="container"]/div[1]/p'}),  # Philippines
-        ('http://abante.com.ph/feed', 'parse_abante', {'country': 'Philippines', 'language': 'Tagalog', 'method': None, 'xpath': None}),  # Philippines
-        ('http://www.tempo.com.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[contains(@class, "entry")]/p', 'thumb_xpath': '//p/a/img'}),  # Philippines
-        ('http://www.abs-cbnnews.com/nation/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines
-        ('http://www.abs-cbnnews.com/entertainment/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines
-        ('http://www.abs-cbnnews.com/sports/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img'}),  # Philippines
+        ('http://www.balita.net.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'Tagalog', 'method': method, 'xpath': '//div[@id="container"]/div[1]/p', 'thumb_xpath': '//p/a/img/@src'}),  # Philippines
+        ('https://www.abante.com.ph/news', 'parse_abante_links', {'country': 'Philippines', 'language': 'Tagalog', 'method': 'parse_abante_content', 'xpath': None}),  # Philippines
+        ('https://www.abante.com.ph/ent', 'parse_abante_links', {'country': 'Philippines', 'language': 'Tagalog', 'method': 'parse_abante_content', 'xpath': None}),  # Philippines
+        ('https://www.abante.com.ph/sports3', 'parse_abante_links', {'country': 'Philippines', 'language': 'Tagalog', 'method': 'parse_abante_content', 'xpath': None}),  # Philippines
+        ('http://www.tempo.com.ph/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[contains(@class, "entry")]/p', 'thumb_xpath': '//p/a/img/@src'}),  # Philippines
+        ('http://www.abs-cbnnews.com/nation/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img/@src'}),  # Philippines
+        ('http://www.abs-cbnnews.com/entertainment/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img/@src'}),  # Philippines
+        ('http://www.abs-cbnnews.com/sports/feed', 'parse_common', {'country': 'Philippines', 'language': 'English', 'method': method, 'xpath': '//div[@class="article-content"]/p', 'thumb_xpath': '//figure/img/@src'}),  # Philippines
         ('http://www.bangkokpost.com/rss/data/most-recent.xml', 'parse_common', {'country': 'Thailand', 'language': 'English', 'method': method, 'xpath': '//div[@class="articleContents"]/p/node()'}),  # Thailand
         ('http://www.thairath.co.th/rss/news', 'parse_common', {'country': 'Thailand', 'language': 'Thai', 'method': method, 'xpath': '//article/p'}),  # Thailand
         ('http://e.vnexpress.net/rss/home.rss', 'parse_common', {'country': 'Vietnam', 'language': 'English', 'method': method, 'xpath': '//div//p'}),  # Vietnam
@@ -141,34 +144,67 @@ class SEANewsSpider(BaseNewsSpider):
 
         return item
 
-    def parse_abante(self, response):
-        feed = feedparser.parse(response.body)
-        for entry in feed.entries:
-            if 'content' not in entry:
-                continue
+    def parse_abante_links(self, response):
+        """
+        Does not use an RSS Feed.
+        Scrapes site for links to articles.
+        """
 
-            item = NewsbyteItem()
-            item['source'] = response.url
-            item['title'] = entry.title
-            item['pubdate'] = time.mktime(entry.published_parsed)
-            item['link'] = entry.link
-            item['country'] = '#' if response.meta['country'] is None else response.meta['country']
-            item['language'] = '#' if response.meta['language'] is None else response.meta['language']
-            item['region'] = self.region
-            item['description'] = entry.description.strip()
-            item['item_id'] = str(uuid4())
-            item['thumbnail'] = ''
+        # Gets links
+        links = response.xpath('//div[contains(@class,"td-animation")]')
+        for link in links:
+            try:
+                item = NewsbyteItem()
+                item['source'] = response.url
+                url = link.xpath('div[@class="item-details"]/h3/a/@href').extract()
+                item['link'] = url[0]
+                title = link.xpath('div[@class="item-details"]/h3/a/@title').extract()
+                item['title'] = title[0]
+                item['country'] = '#' if response.meta['country'] is None else response.meta['country']
+                item['item_id'] = str(uuid4())
+                item['language'] = '#' if response.meta['language'] is None else response.meta['language']
+                item['region'] = self.region
+                pubdate = link.xpath('div[@class="item-details"]/div/span/time/@datetime').extract()
+                pubdate = parse(pubdate[0], fuzzy=True, dayfirst=False)
+                item['pubdate'] = time.mktime(pubdate.timetuple())
+                description = link.xpath('div[@class="item-details"]/div[@class="td-excerpt"]').extract()
+                item['description'] = description[0]
+                thumbnail = link.xpath('div[@class="td-module-thumb"]/a/img/@src').extract()
+                item['thumbnail'] = thumbnail[0]
+                request = Request(
+                    item['link'],
+                    callback=getattr(self, response.meta['method']),
+                    dont_filter=response.meta.get('dont_filter', False)
+                )
+                request.meta['item'] = item
 
-            text = entry.content[0]['value']
-            text = ''.join(Selector(text=tools.convert_br(text)).xpath('string(/)').extract())
-            lines = []
-            for line in text.split('\n'):
-                line = line.strip()
-                if line != '':
-                    lines.append(line)
-            item['article'] = '\n\n'.join(lines)
+                yield request
+            except Exception as e:
+                print e
 
-            yield item
+    def parse_abante_content(self, response):
+        """
+        Scrapes article content.
+        """
+        try:
+            item = response.meta['item']
+
+            nodes = response.xpath('//div[@class="td-post-content"]/p').extract()
+            nodes = self.clean_html_tags(nodes)
+            item['description'] = self.clean_description(item['description'])
+
+            if item['description'] == '':
+                description = nodes[0]
+                item['description'] = (description[:512] + '...') if len(description) > 512 else description
+
+            item['article'] = self.newline_join_lst(nodes)
+            if item['article'] == '':
+                print "No article"
+                return None
+
+            return item
+        except Exception as e:
+            print e
 
     def parse_komchad(self, response):
         item = response.meta['item']
