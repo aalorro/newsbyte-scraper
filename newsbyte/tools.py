@@ -90,6 +90,3 @@ def convert_div(text):
 
 def convert_p(text):
     return re.sub(r'<p.*?>|</p>', '\n', text, flags=re.M | re.I)
-
-def get_src_attr(text):
-    return re.sub(r'<img.*?src="|">|"/>|</img>', '', text)
