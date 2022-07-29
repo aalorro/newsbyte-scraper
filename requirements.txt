@@ -21,7 +21,7 @@ queuelib==1.4.2
 regex==2016.6.19
 ruamel.ordereddict==0.4.9
 ruamel.yaml==0.11.11
-Scrapy==1.1.0
+Scrapy==2.6.2
 selenium==3.3.3
 service-identity==16.0.0
 six==1.10.0
